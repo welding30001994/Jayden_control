@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libreta Futurista</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4fc3a1;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .auth-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3da98a;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 140px);
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .auth-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .auth-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+        }
+        
+        .notebook-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .notebook-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .date-navigation {
+            display: flex;
+            align-items: center;
+        }
+        
+        .date-display {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 15px;
+        }
+        
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .notebook-content {
+            padding: 1.5rem;
+        }
+        
+        .weight-section, .product-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+        }
+        
+        .weight-form, .product-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .weight-form, .product-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .entries-list {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .entry-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .entry-item:last-child {
+            border-bottom: none;
+        }
+        
+        .entry-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .entry-info {
+            flex-grow: 1;
+        }
+        
+        .entry-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .action-btn:hover {
+            color: var(--primary);
+        }
+        
+        .like-btn.liked {
+            color: var(--danger);
+        }
+        
+        .comments-section {
+            margin-top: 2rem;
+        }
+        
+        .comment-form {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        
+        .comment-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+        
+        .comment-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        
+        .comments-list {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .comment-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .summary-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .profit {
+            color: var(--success);
+        }
+        
+        .loss {
+            color: var(--danger);
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+        
+        .alert {
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-error {
+            background: #ffeaea;
+            color: var(--danger);
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-success {
+            background: #e8f6e8;
+            color: var(--success);
+            border: 1px solid #c3e6cb;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <!-- Firebase Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <!-- Cloud Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i>📓</i> Libreta Futurista
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" id="nav-home">Inicio</a></li>
+                    <li><a href="#" id="nav-notebook">Mi Libreta</a></li>
+                </ul>
+            </nav>
+            <div class="auth-section">
+                <div class="user-info hidden" id="user-info">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <span id="user-name">Usuario</span>
+                </div>
+                <button class="btn btn-outline hidden" id="logout-btn">Cerrar Sesión</button>
+                <button class="btn btn-primary" id="login-btn">Iniciar Sesión</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Página de inicio -->
+        <div id="home-page" class="page active">
+            <div class="hero-section" style="text-align: center; padding: 3rem 0;">
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary);">Tu Libreta Personal de Productos Futuristas</h1>
+                <p style="font-size: 1.2rem; max-width: 700px; margin: 0 auto 2rem;">Registra tu peso, lleva un control de tus productos futuristas, calcula tus ganancias y comparte tus experiencias.</p>
+                <button class="btn btn-primary" id="get-started-btn" style="font-size: 1.1rem; padding: 12px 24px;">Comenzar Ahora</button>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem;">📈 Seguimiento de Peso</h3>
+                    <p>Registra tu peso diario y lleva un control de tu progreso con gráficos y estadísticas.</p>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem;">🚀 Productos Futuristas</h3>
+                    <p>Anota tus productos, inversiones, ganancias y pérdidas con cálculos automáticos.</p>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h3 style="color: var(--primary); margin-bottom: 1rem;">💬 Comunidad</h3>
+                    <p>Comparte tus experiencias, comenta y da "me gusta" a las publicaciones de otros usuarios.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Página de autenticación -->
+        <div id="auth-page" class="page">
+            <div class="auth-container">
+                <h2 id="auth-title">Iniciar Sesión</h2>
+                <div id="auth-alert" class="alert hidden"></div>
+                <form id="auth-form">
+                    <div class="form-group" id="name-field" style="display: none;">
+                        <label for="name">Nombre</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" id="auth-submit">Iniciar Sesión</button>
+                </form>
+                <div style="text-align: center;">
+                    <a href="#" id="toggle-auth">¿No tienes cuenta? Regístrate</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Página de la libreta -->
+        <div id="notebook-page" class="page">
+            <div class="notebook-container">
+                <div class="notebook-header">
+                    <div class="date-navigation">
+                        <button class="nav-btn" id="prev-date">‹</button>
+                        <div class="date-display" id="current-date">Cargando...</div>
+                        <button class="nav-btn" id="next-date">›</button>
+                    </div>
+                    <button class="btn btn-outline" id="new-page-btn">Nueva Página</button>
+                </div>
+                
+                <div class="notebook-content">
+                    <!-- Sección de peso -->
+                    <div class="weight-section">
+                        <h3 class="section-title">📊 Registro de Peso</h3>
+                        <form class="weight-form" id="weight-form">
+                            <input type="number" step="0.1" class="form-control" id="weight-input" placeholder="Peso (kg)" required>
+                            <input type="text" class="form-control" id="weight-note" placeholder="Nota (opcional)">
+                            <button type="submit" class="btn btn-primary">Agregar</button>
+                        </form>
+                        <div class="entries-list" id="weight-entries">
+                            <!-- Las entradas de peso se cargarán aquí -->
+                        </div>
+                    </div>
+                    
+                    <!-- Sección de productos -->
+                    <div class="product-section">
+                        <h3 class="section-title">🚀 Productos Futuristas</h3>
+                        <form class="product-form" id="product-form">
+                            <input type="text" class="form-control" id="product-name" placeholder="Nombre del producto" required>
+                            <input type="number" step="0.01" class="form-control" id="product-investment" placeholder="Inversión ($)" required>
+                            <button type="submit" class="btn btn-primary">Agregar</button>
+                        </form>
+                        <div class="entries-list" id="product-entries">
+                            <!-- Las entradas de productos se cargarán aquí -->
+                        </div>
+                    </div>
+                    
+                    <!-- Resumen financiero -->
+                    <div class="summary-section">
+                        <h3 class="section-title">💰 Resumen Financiero</h3>
+                        <div class="summary-grid">
+                            <div class="summary-card">
+                                <div>Inversión Total</div>
+                                <div class="summary-value" id="total-investment">$0.00</div>
+                            </div>
+                            <div class="summary-card">
+                                <div>Ganancias</div>
+                                <div class="summary-value profit" id="total-profit">$0.00</div>
+                            </div>
+                            <div class="summary-card">
+                                <div>Pérdidas</div>
+                                <div class="summary-value loss" id="total-loss">$0.00</div>
+                            </div>
+                            <div class="summary-card">
+                                <div>Balance Neto</div>
+                                <div class="summary-value" id="net-balance">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sección de comentarios -->
+                    <div class="comments-section">
+                        <h3 class="section-title">💬 Comentarios del Día</h3>
+                        <form class="comment-form" id="comment-form">
+                            <input type="text" class="comment-input" id="comment-input" placeholder="Escribe un comentario..." required>
+                            <button type="submit" class="comment-submit">Publicar</button>
+                        </form>
+                        <div class="comments-list" id="comments-list">
+                            <!-- Los comentarios se cargarán aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Libreta Futurista &copy; 2023 - Tu compañero para el seguimiento de peso y productos</p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1Cs2os3tTfrMbYSAmDeJAGnP4tTtsFdw",
+            authDomain: "beaver-trading.firebaseapp.com",
+            databaseURL: "https://beaver-trading-default-rtdb.firebaseio.com",
+            projectId: "beaver-trading",
+            storageBucket: "beaver-trading.firebasestorage.app",
+            messagingSenderId: "926610131904",
+            appId: "1:926610131904:web:c147bd337bd12b4d085625",
+            measurementId: "G-1K51WWF2ZJ"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Referencias a elementos del DOM
+        const pages = {
+            home: document.getElementById('home-page'),
+            auth: document.getElementById('auth-page'),
+            notebook: document.getElementById('notebook-page')
+        };
+        
+        const navHome = document.getElementById('nav-home');
+        const navNotebook = document.getElementById('nav-notebook');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const userInfo = document.getElementById('user-info');
+        const userName = document.getElementById('user-name');
+        const userAvatar = document.getElementById('user-avatar');
+        
+        const authTitle = document.getElementById('auth-title');
+        const authForm = document.getElementById('auth-form');
+        const authSubmit = document.getElementById('auth-submit');
+        const toggleAuth = document.getElementById('toggle-auth');
+        const nameField = document.getElementById('name-field');
+        const authAlert = document.getElementById('auth-alert');
+        
+        const currentDateEl = document.getElementById('current-date');
+        const prevDateBtn = document.getElementById('prev-date');
+        const nextDateBtn = document.getElementById('next-date');
+        const newPageBtn = document.getElementById('new-page-btn');
+        
+        const weightForm = document.getElementById('weight-form');
+        const productForm = document.getElementById('product-form');
+        const commentForm = document.getElementById('comment-form');
+        
+        const weightEntries = document.getElementById('weight-entries');
+        const productEntries = document.getElementById('product-entries');
+        const commentsList = document.getElementById('comments-list');
+        
+        const totalInvestment = document.getElementById('total-investment');
+        const totalProfit = document.getElementById('total-profit');
+        const totalLoss = document.getElementById('total-loss');
+        const netBalance = document.getElementById('net-balance');
+
+        // Estado de la aplicación
+        let currentUser = null;
+        let currentDate = new Date();
+        let isSignUp = false;
+
+        // Funciones de navegación
+        function showPage(pageId) {
+            Object.values(pages).forEach(page => {
+                page.classList.remove('active');
+            });
+            pages[pageId].classList.add('active');
+        }
+
+        // Funciones de autenticación
+        function showAuthAlert(message, type) {
+            authAlert.textContent = message;
+            authAlert.className = `alert alert-${type}`;
+            authAlert.classList.remove('hidden');
+        }
+
+        function hideAuthAlert() {
+            authAlert.classList.add('hidden');
+        }
+
+        function toggleAuthMode() {
+            isSignUp = !isSignUp;
+            if (isSignUp) {
+                authTitle.textContent = 'Crear Cuenta';
+                authSubmit.textContent = 'Registrarse';
+                toggleAuth.textContent = '¿Ya tienes cuenta? Inicia Sesión';
+                nameField.style.display = 'block';
+            } else {
+                authTitle.textContent = 'Iniciar Sesión';
+                authSubmit.textContent = 'Iniciar Sesión';
+                toggleAuth.textContent = '¿No tienes cuenta? Regístrate';
+                nameField.style.display = 'none';
+            }
+            hideAuthAlert();
+        }
+
+        async function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                if (isSignUp) {
+                    const name = document.getElementById('name').value;
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    await userCredential.user.updateProfile({
+                        displayName: name
+                    });
+                    
+                    // Crear documento de usuario en Firestore
+                    await db.collection('users').doc(userCredential.user.uid).set({
+                        name: name,
+                        email: email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } else {
+                    await auth.signInWithEmailAndPassword(email, password);
+                }
+            } catch (error) {
+                showAuthAlert(error.message, 'error');
+            }
+        }
+
+        function updateUIForUser(user) {
+            currentUser = user;
+            if (user) {
+                // Usuario ha iniciado sesión
+                userInfo.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+                loginBtn.classList.add('hidden');
+                
+                userName.textContent = user.displayName || 'Usuario';
+                userAvatar.textContent = (user.displayName || 'U').charAt(0).toUpperCase();
+                
+                showPage('notebook');
+                loadNotebookData();
+            } else {
+                // Usuario no ha iniciado sesión
+                userInfo.classList.add('hidden');
+                logoutBtn.classList.add('hidden');
+                loginBtn.classList.remove('hidden');
+                
+                showPage('home');
+            }
+        }
+
+        // Funciones de la libreta
+        function formatDate(date) {
+            return date.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function getDateKey(date) {
+            return date.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+        }
+
+        function updateDateDisplay() {
+            currentDateEl.textContent = formatDate(currentDate);
+        }
+
+        function navigateDate(direction) {
+            const newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() + direction);
+            currentDate = newDate;
+            updateDateDisplay();
+            loadNotebookData();
+        }
+
+        async function createNewPage() {
+            const today = new Date();
+            if (getDateKey(today) !== getDateKey(currentDate)) {
+                currentDate = today;
+                updateDateDisplay();
+                await loadNotebookData();
+            }
+        }
+
+        // Funciones para cargar y guardar datos
+        async function loadNotebookData() {
+            if (!currentUser) return;
+            
+            const dateKey = getDateKey(currentDate);
+            const notebookRef = db.collection('notebooks').doc(currentUser.uid).collection('dates').doc(dateKey);
+            
+            try {
+                const doc = await notebookRef.get();
+                
+                // Limpiar listas
+                weightEntries.innerHTML = '';
+                productEntries.innerHTML = '';
+                commentsList.innerHTML = '';
+                
+                // Reiniciar resumen financiero
+                let totalInv = 0;
+                let totalProf = 0;
+                let totalLos = 0;
+                
+                if (doc.exists) {
+                    const data = doc.data();
+                    
+                    // Cargar entradas de peso
+                    if (data.weights) {
+                        data.weights.forEach((weight, index) => {
+                            addWeightEntryToDOM(weight, index);
+                        });
+                    }
+                    
+                    // Cargar entradas de productos
+                    if (data.products) {
+                        data.products.forEach((product, index) => {
+                            addProductEntryToDOM(product, index);
+                            totalInv += product.investment || 0;
+                            
+                            // Calcular ganancias/pérdidas (simulado)
+                            const profitLoss = (product.investment || 0) * (Math.random() > 0.5 ? 0.2 : -0.1);
+                            if (profitLoss > 0) {
+                                totalProf += profitLoss;
+                            } else {
+                                totalLos += Math.abs(profitLoss);
+                            }
+                        });
+                    }
+                    
+                    // Cargar comentarios
+                    if (data.comments) {
+                        data.comments.forEach((comment, index) => {
+                            addCommentToDOM(comment, index);
+                        });
+                    }
+                }
+                
+                // Actualizar resumen financiero
+                updateFinancialSummary(totalInv, totalProf, totalLos);
+                
+            } catch (error) {
+                console.error('Error loading notebook data:', error);
+            }
+        }
+
+        function addWeightEntryToDOM(weight, index) {
+            const entryEl = document.createElement('div');
+            entryEl.className = 'entry-item';
+            entryEl.innerHTML = `
+                <div class="entry-info">
+                    <strong>${weight.value} kg</strong>
+                    ${weight.note ? `<span style="margin-left: 10px; color: #777;">${weight.note}</span>` : ''}
+                </div>
+                <div class="entry-actions">
+                    <button class="action-btn like-btn" data-index="${index}">❤️</button>
+                    <button class="action-btn delete-btn" data-index="${index}">🗑️</button>
+                </div>
+            `;
+            weightEntries.appendChild(entryEl);
+        }
+
+        function addProductEntryToDOM(product, index) {
+            // Calcular ganancia/pérdida simulada
+            const profitLoss = (product.investment || 0) * (Math.random() > 0.5 ? 0.2 : -0.1);
+            const profitLossClass = profitLoss >= 0 ? 'profit' : 'loss';
+            const profitLossSymbol = profitLoss >= 0 ? '+' : '-';
+            
+            const entryEl = document.createElement('div');
+            entryEl.className = 'entry-item';
+            entryEl.innerHTML = `
+                <div class="entry-info">
+                    <strong>${product.name}</strong>
+                    <div>
+                        <span>Inversión: $${product.investment.toFixed(2)}</span>
+                        <span style="margin-left: 15px;" class="${profitLossClass}">
+                            ${profitLossSymbol}$${Math.abs(profitLoss).toFixed(2)}
+                        </span>
+                    </div>
+                </div>
+                <div class="entry-actions">
+                    <button class="action-btn like-btn" data-index="${index}">❤️</button>
+                    <button class="action-btn delete-btn" data-index="${index}">🗑️</button>
+                </div>
+            `;
+            productEntries.appendChild(entryEl);
+        }
+
+        function addCommentToDOM(comment, index) {
+            const commentEl = document.createElement('div');
+            commentEl.className = 'comment-item';
+            commentEl.innerHTML = `
+                <div class="comment-header">
+                    <span>${comment.userName || 'Usuario'}</span>
+                    <span>${new Date(comment.timestamp?.toDate()).toLocaleTimeString()}</span>
+                </div>
+                <div>${comment.text}</div>
+                <div style="margin-top: 8px;">
+                    <button class="action-btn like-btn" data-index="${index}">❤️ ${comment.likes || 0}</button>
+                </div>
+            `;
+            commentsList.appendChild(commentEl);
+        }
+
+        function updateFinancialSummary(investment, profit, loss) {
+            totalInvestment.textContent = `$${investment.toFixed(2)}`;
+            totalProfit.textContent = `$${profit.toFixed(2)}`;
+            totalLoss.textContent = `$${loss.toFixed(2)}`;
+            
+            const net = profit - loss;
+            netBalance.textContent = `$${net.toFixed(2)}`;
+            netBalance.className = `summary-value ${net >= 0 ? 'profit' : 'loss'}`;
+        }
+
+        async function saveWeightEntry(weightValue, note) {
+            if (!currentUser) return;
+            
+            const dateKey = getDateKey(currentDate);
+            const notebookRef = db.collection('notebooks').doc(currentUser.uid).collection('dates').doc(dateKey);
+            
+            try {
+                const weightEntry = {
+                    value: parseFloat(weightValue),
+                    note: note,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                await notebookRef.set({
+                    weights: firebase.firestore.FieldValue.arrayUnion(weightEntry)
+                }, { merge: true });
+                
+                loadNotebookData();
+            } catch (error) {
+                console.error('Error saving weight entry:', error);
+            }
+        }
+
+        async function saveProductEntry(name, investment) {
+            if (!currentUser) return;
+            
+            const dateKey = getDateKey(currentDate);
+            const notebookRef = db.collection('notebooks').doc(currentUser.uid).collection('dates').doc(dateKey);
+            
+            try {
+                const productEntry = {
+                    name: name,
+                    investment: parseFloat(investment),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                await notebookRef.set({
+                    products: firebase.firestore.FieldValue.arrayUnion(productEntry)
+                }, { merge: true });
+                
+                loadNotebookData();
+            } catch (error) {
+                console.error('Error saving product entry:', error);
+            }
+        }
+
+        async function saveComment(text) {
+            if (!currentUser) return;
+            
+            const dateKey = getDateKey(currentDate);
+            const notebookRef = db.collection('notebooks').doc(currentUser.uid).collection('dates').doc(dateKey);
+            
+            try {
+                const comment = {
+                    text: text,
+                    userName: currentUser.displayName || 'Usuario',
+                    userId: currentUser.uid,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    likes: 0
+                };
+                
+                await notebookRef.set({
+                    comments: firebase.firestore.FieldValue.arrayUnion(comment)
+                }, { merge: true });
+                
+                loadNotebookData();
+            } catch (error) {
+                console.error('Error saving comment:', error);
+            }
+        }
+
+        // Event Listeners
+        navHome.addEventListener('click', () => showPage('home'));
+        navNotebook.addEventListener('click', () => {
+            if (currentUser) {
+                showPage('notebook');
+            } else {
+                showPage('auth');
+            }
+        });
+        
+        loginBtn.addEventListener('click', () => showPage('auth'));
+        logoutBtn.addEventListener('click', () => auth.signOut());
+        getStartedBtn.addEventListener('click', () => showPage('auth'));
+        
+        toggleAuth.addEventListener('click', toggleAuthMode);
+        authForm.addEventListener('submit', handleAuthSubmit);
+        
+        prevDateBtn.addEventListener('click', () => navigateDate(-1));
+        nextDateBtn.addEventListener('click', () => navigateDate(1));
+        newPageBtn.addEventListener('click', createNewPage);
+        
+        weightForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const weightValue = document.getElementById('weight-input').value;
+            const note = document.getElementById('weight-note').value;
+            
+            if (weightValue) {
+                saveWeightEntry(weightValue, note);
+                weightForm.reset();
+            }
+        });
+        
+        productForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('product-name').value;
+            const investment = document.getElementById('product-investment').value;
+            
+            if (name && investment) {
+                saveProductEntry(name, investment);
+                productForm.reset();
+            }
+        });
+        
+        commentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = document.getElementById('comment-input').value;
+            
+            if (text) {
+                saveComment(text);
+                commentForm.reset();
+            }
+        });
+
+        // Observador de autenticación
+        auth.onAuthStateChanged((user) => {
+            updateUIForUser(user);
+        });
+
+        // Inicialización
+        updateDateDisplay();
+    </script>
+</body>
+</html>
