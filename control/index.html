@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Ganado y Gastos - Jayden Company</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2a6bff;
+            --primary-dark: #1a4fc4;
+            --accent: #00d4ff;
+            --dark: #0f1422;
+            --darker: #0a0e18;
+            --light: #f0f4ff;
+            --card-bg: rgba(20, 25, 40, 0.7);
+            --card-bg-solid: rgba(20, 25, 40, 0.95);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            --success: #00cc88;
+            --warning: #ffaa00;
+            --danger: #ff4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', 'Orbitron', 'Rajdhani', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(42, 107, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(42, 107, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+            perspective: 1000px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 15px 0;
+            background: rgba(15, 20, 35, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(42, 107, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+            color: var(--light);
+        }
+        
+        .logo i {
+            color: var(--primary);
+            font-size: 2.2rem;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            font-size: 0.9rem;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.8rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(42, 107, 255, 0.3);
+        }
+        
+        .logout-btn {
+            background: transparent;
+            color: var(--light);
+            border: 1px solid var(--primary);
+        }
+        
+        .logout-btn:hover {
+            background: rgba(42, 107, 255, 0.1);
+            box-shadow: 0 0 10px rgba(42, 107, 255, 0.3);
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(42, 107, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: 1px solid rgba(42, 107, 255, 0.2);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-avatar:hover {
+            background: rgba(42, 107, 255, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(42, 107, 255, 0.3);
+        }
+        
+        .user-avatar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(42, 107, 255, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .dashboard {
+            padding-top: 100px;
+            padding-bottom: 60px;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(42, 107, 255, 0.1);
+            backdrop-filter: blur(15px);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(42, 107, 255, 0.2);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(42, 107, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(42, 107, 255, 0.2);
+            border-radius: 6px;
+            font-size: 16px;
+            background: rgba(10, 15, 25, 0.8);
+            color: var(--light);
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(10, 15, 25, 0.9);
+            box-shadow: 0 0 10px rgba(42, 107, 255, 0.3);
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(42, 107, 255, 0.2);
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab:hover {
+            color: var(--accent);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        th {
+            background-color: rgba(42, 107, 255, 0.1);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        tr:hover {
+            background-color: rgba(42, 107, 255, 0.05);
+        }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(42, 107, 255, 0.1);
+            transition: var(--transition);
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(42, 107, 255, 0.2);
+        }
+        
+        .summary-card h3 {
+            margin-bottom: 10px;
+            color: var(--light);
+            font-size: 1.1rem;
+        }
+        
+        .summary-card .amount {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .income {
+            color: var(--success);
+        }
+        
+        .expense {
+            color: var(--danger);
+        }
+        
+        .balance {
+            color: var(--primary);
+        }
+        
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+        
+        .auth-tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .success {
+            background-color: rgba(0, 204, 136, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(0, 204, 136, 0.3);
+        }
+        
+        .error {
+            background-color: rgba(255, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+        
+        /* Estilos para categorías */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-card h3 {
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+        
+        .category-card .amount {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .category-card .actions {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .category-card.income-category {
+            border-left-color: var(--success);
+        }
+        
+        .category-card.expense-category {
+            border-left-color: var(--danger);
+        }
+        
+        /* Estilos para formulario de chanchos */
+        .animal-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .animal-form .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        /* Estilos para vista de chanchos */
+        .animals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .animal-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid rgba(42, 107, 255, 0.1);
+        }
+        
+        .animal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .animal-card h3 {
+            margin-bottom: 10px;
+            color: var(--light);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 5px;
+        }
+        
+        .animal-card .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .animal-card .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .animal-card .detail-label {
+            font-size: 12px;
+            color: rgba(240, 244, 255, 0.7);
+            margin-bottom: 2px;
+        }
+        
+        .animal-card .detail-value {
+            font-weight: 600;
+        }
+        
+        .animal-card .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        /* Estilos para resumen de categorías */
+        .category-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        
+        .category-income {
+            color: var(--success);
+        }
+        
+        .category-expense {
+            color: var(--danger);
+        }
+        
+        /* Estilos para vista de detalles del chancho */
+        .animal-detail {
+            margin-bottom: 20px;
+        }
+        
+        .animal-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .animal-detail-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .animal-detail-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(42, 107, 255, 0.1);
+        }
+        
+        .animal-detail-card h4 {
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+        
+        .animal-detail-card .value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .back-button {
+            background-color: var(--warning);
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--light);
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            header {
+                padding: 10px 0;
+            }
+            
+            .logo {
+                font-size: 1.6rem;
+            }
+            
+            .logo i {
+                font-size: 1.8rem;
+            }
+            
+            .dashboard {
+                padding-top: 80px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                padding: 10px;
+                text-align: center;
+            }
+            
+            .animal-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .animals-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .animal-detail-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .user-menu {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.8rem;
+            }
+            
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-overlay"></div>
+    
+    <div id="auth-section" class="auth-container">
+        <div class="card">
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="login-tab">Iniciar Sesión</div>
+                <div class="auth-tab" id="register-tab">Registrarse</div>
+            </div>
+            
+            <div id="login-form" class="auth-form active">
+                <h2>Iniciar Sesión</h2>
+                <div class="form-group">
+                    <label for="login-email">Correo Electrónico</label>
+                    <input type="email" id="login-email" placeholder="Tu correo electrónico">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" placeholder="Tu contraseña">
+                </div>
+                <button id="login-btn" class="btn btn-primary" style="width: 100%;">Iniciar Sesión</button>
+            </div>
+            
+            <div id="register-form" class="auth-form">
+                <h2>Registrarse</h2>
+                <div class="form-group">
+                    <label for="register-name">Nombre</label>
+                    <input type="text" id="register-name" placeholder="Tu nombre completo">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Correo Electrónico</label>
+                    <input type="email" id="register-email" placeholder="Tu correo electrónico">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Contraseña</label>
+                    <input type="password" id="register-password" placeholder="Tu contraseña">
+                </div>
+                <button id="register-btn" class="btn btn-secondary" style="width: 100%;">Registrarse</button>
+            </div>
+            
+            <div id="auth-message" class="message hidden"></div>
+        </div>
+    </div>
+    
+    <div id="app-section" class="hidden">
+        <header>
+            <div class="container header-content">
+                <nav>
+                    <div class="logo">
+                        <i class="fas fa-chart-line"></i>
+                        <span>JAYDEN COMPANY</span>
+                    </div>
+                    <div class="user-menu">
+                        <span id="user-name">Usuario</span>
+                        <button id="logout-btn" class="btn logout-btn">Cerrar Sesión</button>
+                        <div class="user-avatar" id="userAvatar">JD</div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        
+        <div class="container dashboard">
+            <div class="summary">
+                <div class="summary-card">
+                    <h3>Total Ingresos</h3>
+                    <div class="amount income" id="total-income">$0.00</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Gastos</h3>
+                    <div class="amount expense" id="total-expenses">$0.00</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Balance</h3>
+                    <div class="amount balance" id="balance">$0.00</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Chanchos</h3>
+                    <div class="amount" id="total-animals">0</div>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="animals">Mis Chanchos</div>
+                <div class="tab" data-tab="add-animal">Agregar Chancho</div>
+                <div class="tab" data-tab="transactions">Todas las Transacciones</div>
+                <div class="tab" data-tab="add-transaction">Agregar Transacción</div>
+                <div class="tab" data-tab="categories">Categorías</div>
+            </div>
+            
+            <div id="animals-tab" class="tab-content active">
+                <div class="card">
+                    <h2>Mis Chanchos</h2>
+                    <div id="animals-grid" class="animals-grid">
+                        <!-- Los chanchos se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+            
+            <div id="animal-detail-tab" class="tab-content">
+                <div class="card">
+                    <button id="back-to-animals" class="btn back-button">← Volver a Mis Chanchos</button>
+                    <div id="animal-detail">
+                        <!-- Los detalles del chancho se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+            
+            <div id="add-animal-tab" class="tab-content">
+                <div class="card">
+                    <h2>Agregar Chancho</h2>
+                    <form id="animal-form">
+                        <div class="animal-form">
+                            <div class="form-group">
+                                <label for="animal-id">Identificación</label>
+                                <input type="text" id="animal-id" placeholder="Ej: CH-001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="animal-weight">Peso (kg)</label>
+                                <input type="number" id="animal-weight" step="0.01" placeholder="Ej: 222" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="animal-price">Precio ($)</label>
+                                <input type="number" id="animal-price" step="0.01" placeholder="Ej: 319.65" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="animal-date">Fecha de Adquisición</label>
+                                <input type="date" id="animal-date" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="animal-notes">Notas</label>
+                                <textarea id="animal-notes" placeholder="Observaciones sobre el chancho"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Agregar Chancho</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div id="transactions-tab" class="tab-content">
+                <div class="card">
+                    <h2>Todas las Transacciones</h2>
+                    <table id="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Descripción</th>
+                                <th>Categoría</th>
+                                <th>Chancho</th>
+                                <th>Tipo</th>
+                                <th>Monto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-body">
+                            <!-- Las transacciones se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="add-transaction-tab" class="tab-content">
+                <div class="card">
+                    <h2>Agregar Transacción</h2>
+                    <form id="transaction-form">
+                        <div class="form-group">
+                            <label for="transaction-description">Descripción</label>
+                            <input type="text" id="transaction-description" placeholder="Ej: Venta de chancho, Compra de alimento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transaction-category">Categoría</label>
+                            <select id="transaction-category" required>
+                                <option value="">Selecciona una categoría</option>
+                                <!-- Las categorías se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="transaction-animal">Asociar a Chancho (Opcional)</label>
+                            <select id="transaction-animal">
+                                <option value="">No asociar a chancho</option>
+                                <!-- Los chanchos se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="transaction-type">Tipo</label>
+                            <select id="transaction-type" required>
+                                <option value="">Selecciona un tipo</option>
+                                <option value="income">Ingreso</option>
+                                <option value="expense">Gasto</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="transaction-amount">Monto ($)</label>
+                            <input type="number" id="transaction-amount" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transaction-date">Fecha</label>
+                            <input type="date" id="transaction-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transaction-notes">Notas</label>
+                            <textarea id="transaction-notes" placeholder="Detalles adicionales de la transacción"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Agregar Transacción</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div id="categories-tab" class="tab-content">
+                <div class="card">
+                    <h2>Gestionar Categorías</h2>
+                    <div class="form-group">
+                        <label for="new-category">Nueva Categoría</label>
+                        <input type="text" id="new-category" placeholder="Nombre de la categoría">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-category-type">Tipo de Categoría</label>
+                        <select id="new-category-type">
+                            <option value="income">Ingreso</option>
+                            <option value="expense">Gasto</option>
+                        </select>
+                    </div>
+                    <button id="add-category-btn" class="btn btn-secondary">Agregar Categoría</button>
+                    
+                    <h3 style="margin-top: 20px;">Mis Categorías</h3>
+                    <div id="categories-grid" class="categories-grid">
+                        <!-- Las categorías se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1Cs2os3tTfrMbYSAmDeJAGnP4tTtsFdw",
+            authDomain: "beaver-trading.firebaseapp.com",
+            databaseURL: "https://beaver-trading-default-rtdb.firebaseio.com",
+            projectId: "beaver-trading",
+            storageBucket: "beaver-trading.firebasestorage.app",
+            messagingSenderId: "926610131904",
+            appId: "1:926610131904:web:c147bd337bd12b4d085625",
+            measurementId: "G-1K51WWF2ZJ"
+        };
+        
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+        
+        // Elementos de la interfaz
+        const authSection = document.getElementById('auth-section');
+        const appSection = document.getElementById('app-section');
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const authMessage = document.getElementById('auth-message');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userName = document.getElementById('user-name');
+        
+        // Elementos de la aplicación
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const transactionForm = document.getElementById('transaction-form');
+        const animalForm = document.getElementById('animal-form');
+        const transactionsBody = document.getElementById('transactions-body');
+        const transactionCategory = document.getElementById('transaction-category');
+        const transactionAnimal = document.getElementById('transaction-animal');
+        const categoriesGrid = document.getElementById('categories-grid');
+        const animalsGrid = document.getElementById('animals-grid');
+        const animalDetail = document.getElementById('animal-detail');
+        const backToAnimals = document.getElementById('back-to-animals');
+        const addCategoryBtn = document.getElementById('add-category-btn');
+        const newCategoryInput = document.getElementById('new-category');
+        const newCategoryType = document.getElementById('new-category-type');
+        
+        // Variables globales
+        let currentUser = null;
+        let userCategories = [];
+        let userTransactions = [];
+        let userAnimals = [];
+        let selectedAnimalId = null;
+
+        // Funciones de autenticación
+        function showAuthMessage(message, type) {
+            authMessage.textContent = message;
+            authMessage.className = `message ${type}`;
+            authMessage.classList.remove('hidden');
+            
+            setTimeout(() => {
+                authMessage.classList.add('hidden');
+            }, 5000);
+        }
+
+        function switchAuthTab(tab) {
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+            } else {
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+                registerForm.classList.add('active');
+                loginForm.classList.remove('active');
+            }
+        }
+
+        loginTab.addEventListener('click', () => switchAuthTab('login'));
+        registerTab.addEventListener('click', () => switchAuthTab('register'));
+
+        registerBtn.addEventListener('click', () => {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            
+            if (!name || !email || !password) {
+                showAuthMessage('Por favor, completa todos los campos', 'error');
+                return;
+            }
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    
+                    // Guardar información adicional del usuario en la base de datos
+                    database.ref('users/' + user.uid).set({
+                        name: name,
+                        email: email,
+                        createdAt: new Date().toISOString()
+                    });
+                    
+                    showAuthMessage('Usuario registrado exitosamente', 'success');
+                    switchAuthTab('login');
+                    
+                    // Limpiar formulario
+                    document.getElementById('register-name').value = '';
+                    document.getElementById('register-email').value = '';
+                    document.getElementById('register-password').value = '';
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    let errorMessage = 'Error al registrar usuario';
+                    
+                    if (errorCode === 'auth/email-already-in-use') {
+                        errorMessage = 'El correo electrónico ya está en uso';
+                    } else if (errorCode === 'auth/weak-password') {
+                        errorMessage = 'La contraseña es demasiado débil';
+                    } else if (errorCode === 'auth/invalid-email') {
+                        errorMessage = 'El correo electrónico no es válido';
+                    }
+                    
+                    showAuthMessage(errorMessage, 'error');
+                });
+        });
+
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                showAuthMessage('Por favor, completa todos los campos', 'error');
+                return;
+            }
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Usuario autenticado
+                    showAuthMessage('Inicio de sesión exitoso', 'success');
+                    
+                    // Limpiar formulario
+                    document.getElementById('login-email').value = '';
+                    document.getElementById('login-password').value = '';
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    let errorMessage = 'Error al iniciar sesión';
+                    
+                    if (errorCode === 'auth/user-not-found') {
+                        errorMessage = 'Usuario no encontrado';
+                    } else if (errorCode === 'auth/wrong-password') {
+                        errorMessage = 'Contraseña incorrecta';
+                    } else if (errorCode === 'auth/invalid-email') {
+                        errorMessage = 'El correo electrónico no es válido';
+                    }
+                    
+                    showAuthMessage(errorMessage, 'error');
+                });
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    // Cierre de sesión exitoso
+                    console.log('Sesión cerrada correctamente');
+                })
+                .catch((error) => {
+                    console.error('Error al cerrar sesión:', error);
+                });
+        });
+
+        // Observador de estado de autenticación
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Usuario ha iniciado sesión
+                currentUser = user;
+                console.log('Usuario autenticado:', user.email);
+                
+                authSection.classList.add('hidden');
+                appSection.classList.remove('hidden');
+                
+                // Obtener información del usuario
+                database.ref('users/' + user.uid).on('value', (snapshot) => {
+                    const userData = snapshot.val();
+                    if (userData) {
+                        userName.textContent = userData.name;
+                        document.getElementById('userAvatar').textContent = userData.name.charAt(0).toUpperCase();
+                    }
+                });
+                
+                // Cargar datos del usuario
+                loadUserData();
+            } else {
+                // Usuario ha cerrado sesión
+                currentUser = null;
+                console.log('Usuario no autenticado');
+                
+                authSection.classList.remove('hidden');
+                appSection.classList.add('hidden');
+                
+                // Limpiar formularios
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+                document.getElementById('register-name').value = '';
+                document.getElementById('register-email').value = '';
+                document.getElementById('register-password').value = '';
+            }
+        });
+
+        // Funciones de la aplicación
+        function switchTab(tabName) {
+            tabs.forEach(tab => {
+                if (tab.dataset.tab === tabName) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            tabContents.forEach(content => {
+                if (content.id === `${tabName}-tab`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                switchTab(tab.dataset.tab);
+            });
+        });
+
+        backToAnimals.addEventListener('click', () => {
+            switchTab('animals');
+        });
+
+        function loadUserData() {
+            if (!currentUser) return;
+            
+            console.log('Cargando datos del usuario:', currentUser.uid);
+            
+            // Cargar categorías
+            database.ref('users/' + currentUser.uid + '/categories').on('value', (snapshot) => {
+                userCategories = [];
+                categoriesGrid.innerHTML = '';
+                transactionCategory.innerHTML = '<option value="">Selecciona una categoría</option>';
+                
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        userCategories.push({
+                            id: key,
+                            name: data[key].name,
+                            type: data[key].type || 'expense'
+                        });
+                        
+                        // Agregar al grid de categorías
+                        const categoryCard = document.createElement('div');
+                        categoryCard.className = `category-card ${data[key].type === 'income' ? 'income-category' : 'expense-category'}`;
+                        categoryCard.innerHTML = `
+                            <h3>${data[key].name}</h3>
+                            <div class="category-summary">
+                                <span class="category-income">Ingresos: $${getCategoryTotal(key, 'income').toFixed(2)}</span>
+                                <span class="category-expense">Gastos: $${getCategoryTotal(key, 'expense').toFixed(2)}</span>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-danger btn-sm delete-category" data-id="${key}">Eliminar</button>
+                            </div>
+                        `;
+                        categoriesGrid.appendChild(categoryCard);
+                        
+                        // Agregar al selector de categorías
+                        const option = document.createElement('option');
+                        option.value = key;
+                        option.textContent = data[key].name;
+                        transactionCategory.appendChild(option);
+                    });
+                }
+                
+                // Agregar eventos a los botones de eliminar categoría
+                document.querySelectorAll('.delete-category').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const categoryId = e.target.dataset.id;
+                        deleteCategory(categoryId);
+                    });
+                });
+            });
+            
+            // Cargar transacciones
+            database.ref('users/' + currentUser.uid + '/transactions').on('value', (snapshot) => {
+                userTransactions = [];
+                transactionsBody.innerHTML = '';
+                
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        userTransactions.push({
+                            id: key,
+                            ...data[key]
+                        });
+                        
+                        // Agregar a la tabla de transacciones
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${formatDate(data[key].date)}</td>
+                            <td>${data[key].description}</td>
+                            <td>${getCategoryName(data[key].category)}</td>
+                            <td>${data[key].animal ? getAnimalName(data[key].animal) : 'General'}</td>
+                            <td>${data[key].type === 'income' ? 'Ingreso' : 'Gasto'}</td>
+                            <td class="${data[key].type === 'income' ? 'income' : 'expense'}">$${parseFloat(data[key].amount).toFixed(2)}</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm delete-transaction" data-id="${key}">Eliminar</button>
+                            </td>
+                        `;
+                        transactionsBody.appendChild(tr);
+                    });
+                }
+                
+                // Actualizar resumen
+                updateSummary();
+                
+                // Agregar eventos a los botones de eliminar transacción
+                document.querySelectorAll('.delete-transaction').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const transactionId = e.target.dataset.id;
+                        deleteTransaction(transactionId);
+                    });
+                });
+            });
+            
+            // Cargar chanchos
+            database.ref('users/' + currentUser.uid + '/animals').on('value', (snapshot) => {
+                userAnimals = [];
+                animalsGrid.innerHTML = '';
+                transactionAnimal.innerHTML = '<option value="">No asociar a chancho</option>';
+                
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        userAnimals.push({
+                            id: key,
+                            ...data[key]
+                        });
+                        
+                        // Agregar al grid de chanchos
+                        const animalCard = document.createElement('div');
+                        animalCard.className = 'animal-card';
+                        animalCard.dataset.animalId = key;
+                        animalCard.innerHTML = `
+                            <h3>${data[key].id}</h3>
+                            <div class="details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Peso</span>
+                                    <span class="detail-value">${data[key].weight} kg</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Precio</span>
+                                    <span class="detail-value">$${parseFloat(data[key].price).toFixed(2)}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fecha</span>
+                                    <span class="detail-value">${formatDate(data[key].date)}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Valor por kg</span>
+                                    <span class="detail-value">$${(parseFloat(data[key].price) / parseFloat(data[key].weight)).toFixed(2)}</span>
+                                </div>
+                            </div>
+                            ${data[key].notes ? `<p><strong>Notas:</strong> ${data[key].notes}</p>` : ''}
+                            <div class="actions">
+                                <button class="btn btn-primary btn-sm view-animal" data-id="${key}">Ver Detalles</button>
+                                <button class="btn btn-danger btn-sm delete-animal" data-id="${key}">Eliminar</button>
+                            </div>
+                        `;
+                        animalsGrid.appendChild(animalCard);
+                        
+                        // Agregar al selector de chanchos
+                        const option = document.createElement('option');
+                        option.value = key;
+                        option.textContent = data[key].id;
+                        transactionAnimal.appendChild(option);
+                    });
+                }
+                
+                // Actualizar contador de chanchos
+                document.getElementById('total-animals').textContent = userAnimals.length;
+                
+                // Agregar eventos a los botones de eliminar chancho
+                document.querySelectorAll('.delete-animal').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const animalId = e.target.dataset.id;
+                        deleteAnimal(animalId);
+                    });
+                });
+                
+                // Agregar eventos a los botones de ver detalles
+                document.querySelectorAll('.view-animal').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const animalId = e.target.dataset.id;
+                        showAnimalDetail(animalId);
+                    });
+                });
+                
+                // Agregar eventos a las tarjetas de chanchos
+                document.querySelectorAll('.animal-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        // Solo activar si no se hizo clic en un botón
+                        if (!e.target.closest('button')) {
+                            const animalId = card.dataset.animalId;
+                            showAnimalDetail(animalId);
+                        }
+                    });
+                });
+            });
+        }
+
+        function showAnimalDetail(animalId) {
+            const animal = userAnimals.find(a => a.id === animalId);
+            if (!animal) return;
+            
+            selectedAnimalId = animalId;
+            
+            // Obtener transacciones asociadas a este chancho
+            const animalTransactions = userTransactions.filter(t => t.animal === animalId);
+            
+            // Calcular totales
+            const totalIncome = animalTransactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+                
+            const totalExpenses = animalTransactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+            
+            const balance = totalIncome - totalExpenses;
+            const profit = balance - parseFloat(animal.price);
+            
+            // Mostrar detalles del chancho
+            animalDetail.innerHTML = `
+                <div class="animal-detail-header">
+                    <h2>${animal.id}</h2>
+                    <button class="btn btn-primary" id="add-transaction-to-animal">Agregar Transacción</button>
+                </div>
+                
+                <div class="animal-detail-info">
+                    <div class="animal-detail-card">
+                        <h4>Peso</h4>
+                        <div class="value">${animal.weight} kg</div>
+                    </div>
+                    <div class="animal-detail-card">
+                        <h4>Precio de Compra</h4>
+                        <div class="value">$${parseFloat(animal.price).toFixed(2)}</div>
+                    </div>
+                    <div class="animal-detail-card">
+                        <h4>Valor por kg</h4>
+                        <div class="value">$${(parseFloat(animal.price) / parseFloat(animal.weight)).toFixed(2)}</div>
+                    </div>
+                    <div class="animal-detail-card">
+                        <h4>Fecha</h4>
+                        <div class="value">${formatDate(animal.date)}</div>
+                    </div>
+                </div>
+                
+                ${animal.notes ? `
+                <div class="card">
+                    <h4>Notas</h4>
+                    <p>${animal.notes}</p>
+                </div>
+                ` : ''}
+                
+                <div class="summary">
+                    <div class="summary-card">
+                        <h3>Ingresos</h3>
+                        <div class="amount income">$${totalIncome.toFixed(2)}</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Gastos</h3>
+                        <div class="amount expense">$${totalExpenses.toFixed(2)}</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Balance</h3>
+                        <div class="amount ${balance >= 0 ? 'income' : 'expense'}">$${balance.toFixed(2)}</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Ganancia/Pérdida</h3>
+                        <div class="amount ${profit >= 0 ? 'income' : 'expense'}">$${profit.toFixed(2)}</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Transacciones de ${animal.id}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Descripción</th>
+                                <th>Categoría</th>
+                                <th>Tipo</th>
+                                <th>Monto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="animal-transactions-body">
+                            ${animalTransactions.length > 0 ? 
+                                animalTransactions.map(t => `
+                                    <tr>
+                                        <td>${formatDate(t.date)}</td>
+                                        <td>${t.description}</td>
+                                        <td>${getCategoryName(t.category)}</td>
+                                        <td>${t.type === 'income' ? 'Ingreso' : 'Gasto'}</td>
+                                        <td class="${t.type === 'income' ? 'income' : 'expense'}">$${parseFloat(t.amount).toFixed(2)}</td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm delete-transaction" data-id="${t.id}">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                `).join('') : 
+                                '<tr><td colspan="6" style="text-align: center;">No hay transacciones para este chancho</td></tr>'
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            // Agregar evento al botón de agregar transacción
+            document.getElementById('add-transaction-to-animal').addEventListener('click', () => {
+                // Pre-seleccionar el chancho en el formulario de transacciones
+                transactionAnimal.value = animalId;
+                switchTab('add-transaction');
+            });
+            
+            // Agregar eventos a los botones de eliminar transacción
+            document.querySelectorAll('#animal-transactions-body .delete-transaction').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const transactionId = e.target.dataset.id;
+                    deleteTransaction(transactionId);
+                });
+            });
+            
+            // Cambiar a la pestaña de detalles
+            switchTab('animal-detail');
+        }
+
+        function getAnimalName(animalId) {
+            const animal = userAnimals.find(a => a.id === animalId);
+            return animal ? animal.id : 'Desconocido';
+        }
+
+        function getCategoryName(categoryId) {
+            const category = userCategories.find(cat => cat.id === categoryId);
+            return category ? category.name : 'Sin categoría';
+        }
+
+        function getCategoryTotal(categoryId, type) {
+            return userTransactions
+                .filter(t => t.category === categoryId && t.type === type)
+                .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES');
+        }
+
+        function updateSummary() {
+            let totalIncome = 0;
+            let totalExpenses = 0;
+            
+            userTransactions.forEach(transaction => {
+                if (transaction.type === 'income') {
+                    totalIncome += parseFloat(transaction.amount);
+                } else {
+                    totalExpenses += parseFloat(transaction.amount);
+                }
+            });
+            
+            document.getElementById('total-income').textContent = `$${totalIncome.toFixed(2)}`;
+            document.getElementById('total-expenses').textContent = `$${totalExpenses.toFixed(2)}`;
+            document.getElementById('balance').textContent = `$${(totalIncome - totalExpenses).toFixed(2)}`;
+        }
+
+        function addCategory(name, type) {
+            if (!currentUser || !name) return;
+            
+            const categoriesRef = database.ref('users/' + currentUser.uid + '/categories');
+            const newCategoryRef = categoriesRef.push();
+            
+            newCategoryRef.set({
+                name: name,
+                type: type
+            });
+        }
+
+        function deleteCategory(categoryId) {
+            if (!currentUser || !categoryId) return;
+            
+            const categoryRef = database.ref('users/' + currentUser.uid + '/categories/' + categoryId);
+            categoryRef.remove();
+        }
+
+        function addAnimal(animal) {
+            if (!currentUser) return;
+            
+            const animalsRef = database.ref('users/' + currentUser.uid + '/animals');
+            const newAnimalRef = animalsRef.push();
+            
+            newAnimalRef.set(animal);
+        }
+
+        function deleteAnimal(animalId) {
+            if (!currentUser || !animalId) return;
+            
+            const animalRef = database.ref('users/' + currentUser.uid + '/animals/' + animalId);
+            animalRef.remove();
+        }
+
+        function addTransaction(transaction) {
+            if (!currentUser) return;
+            
+            const transactionsRef = database.ref('users/' + currentUser.uid + '/transactions');
+            const newTransactionRef = transactionsRef.push();
+            
+            newTransactionRef.set(transaction);
+        }
+
+        function deleteTransaction(transactionId) {
+            if (!currentUser || !transactionId) return;
+            
+            const transactionRef = database.ref('users/' + currentUser.uid + '/transactions/' + transactionId);
+            transactionRef.remove();
+        }
+
+        // Event Listeners
+        transactionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const description = document.getElementById('transaction-description').value;
+            const category = document.getElementById('transaction-category').value;
+            const animal = document.getElementById('transaction-animal').value;
+            const type = document.getElementById('transaction-type').value;
+            const amount = document.getElementById('transaction-amount').value;
+            const date = document.getElementById('transaction-date').value;
+            const notes = document.getElementById('transaction-notes').value;
+            
+            if (!description || !category || !type || !amount || !date) {
+                alert('Por favor, completa todos los campos obligatorios');
+                return;
+            }
+            
+            addTransaction({
+                description: description,
+                category: category,
+                animal: animal || null,
+                type: type,
+                amount: parseFloat(amount),
+                date: date,
+                notes: notes
+            });
+            
+            // Limpiar formulario
+            transactionForm.reset();
+            document.getElementById('transaction-date').valueAsDate = new Date();
+            
+            // Si veníamos de un chancho específico, volver a él
+            if (selectedAnimalId) {
+                showAnimalDetail(selectedAnimalId);
+            } else {
+                // Cambiar a la pestaña de transacciones
+                switchTab('transactions');
+            }
+        });
+
+        animalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('animal-id').value;
+            const weight = document.getElementById('animal-weight').value;
+            const price = document.getElementById('animal-price').value;
+            const date = document.getElementById('animal-date').value;
+            const notes = document.getElementById('animal-notes').value;
+            
+            if (!id || !weight || !price || !date) {
+                alert('Por favor, completa todos los campos obligatorios');
+                return;
+            }
+            
+            addAnimal({
+                id: id,
+                weight: parseFloat(weight),
+                price: parseFloat(price),
+                date: date,
+                notes: notes
+            });
+            
+            // Limpiar formulario
+            animalForm.reset();
+            document.getElementById('animal-date').valueAsDate = new Date();
+            
+            // Cambiar a la pestaña de chanchos
+            switchTab('animals');
+        });
+
+        addCategoryBtn.addEventListener('click', () => {
+            const name = newCategoryInput.value.trim();
+            const type = newCategoryType.value;
+            
+            if (!name) {
+                alert('Por favor, ingresa un nombre para la categoría');
+                return;
+            }
+            
+            addCategory(name, type);
+            newCategoryInput.value = '';
+        });
+
+        // Establecer fecha actual por defecto
+        document.getElementById('transaction-date').valueAsDate = new Date();
+        document.getElementById('animal-date').valueAsDate = new Date();
+    </script>
+</body>
+</html>

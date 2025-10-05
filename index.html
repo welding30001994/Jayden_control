@@ -3,595 +3,1100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Libreta Futurista</title>
+    <title>Jayden Company</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Estilos -->
     <style>
-        :root {
-            --primary: #4a6fa5;
-            --secondary: #166088;
-            --accent: #4fc3a1;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            --danger: #e74c3c;
-            --success: #2ecc71;
+    :root {
+        --primary: #2a6bff;
+        --primary-dark: #1a4fc4;
+        --accent: #00d4ff;
+        --accent-glow: rgba(0, 212, 255, 0.4);
+        --dark: #0f1422;
+        --darker: #0a0e18;
+        --light: #f0f4ff;
+        --card-bg: rgba(20, 25, 40, 0.7);
+        --card-bg-solid: rgba(20, 25, 40, 0.95);
+        --neon-glow: 0 0 10px var(--accent), 0 0 20px rgba(0, 212, 255, 0.3);
+        --neon-glow-strong: 0 0 15px var(--accent), 0 0 30px rgba(0, 212, 255, 0.4);
+        --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Montserrat', 'Orbitron', 'Rajdhani', sans-serif;
+    }
+    
+    /* Cargador futurista */
+    .loader-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--darker);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    
+    .loader-container.fade-out {
+        opacity: 0;
+        visibility: hidden;
+    }
+    
+    .loader-logo {
+        font-size: 3.5rem;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        letter-spacing: 2px;
+        color: var(--light);
+        margin-bottom: 3rem;
+        animation: pulse 2s infinite alternate;
+    }
+    
+    .loader-logo i {
+        color: var(--primary);
+        font-size: 4rem;
+    }
+    
+    .loader {
+        width: 200px;
+        height: 4px;
+        background: rgba(42, 107, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 2rem;
+    }
+    
+    .loader::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--gradient);
+        animation: loading 2.5s infinite;
+    }
+    
+    @keyframes loading {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    
+    .loader-text {
+        color: var(--light);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-align: center;
+        margin-top: 1rem;
+    }
+    
+    .loader-dots {
+        display: flex;
+        gap: 10px;
+        margin-top: 1.5rem;
+    }
+    
+    .loader-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--primary);
+        animation: dot-pulse 1.5s infinite ease-in-out;
+    }
+    
+    .loader-dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .loader-dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes dot-pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.5); opacity: 0.7; }
+    }
+    
+    .loader-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            linear-gradient(rgba(42, 107, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(42, 107, 255, 0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: -1;
+        animation: grid-move 15s linear infinite;
+    }
+    
+    @keyframes grid-move {
+        0% { background-position: 0 0; }
+        100% { background-position: 40px 40px; }
+    }
+    
+    body {
+        background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+        color: #fff;
+        line-height: 1.6;
+        min-height: 100vh;
+        padding: 0;
+        position: relative;
+        overflow-x: hidden;
+    }
+    
+    .grid-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            linear-gradient(rgba(42, 107, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(42, 107, 255, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        pointer-events: none;
+        z-index: -1;
+        perspective: 1000px;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    header {
+        background-color: rgba(15, 20, 35, 0.8);
+        color: white;
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(42, 107, 255, 0.2);
+        backdrop-filter: blur(15px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .logo {
+        font-size: 1.8rem;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        letter-spacing: 1px;
+        color: var(--light);
+    }
+    
+    .logo i {
+        color: var(--primary);
+        font-size: 2rem;
+    }
+    
+    .nav-links {
+        display: flex;
+        gap: 30px;
+    }
+    
+    .nav-links a {
+        color: var(--light);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        position: relative;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        padding: 5px 0;
+    }
+    
+    .nav-links a:hover {
+        color: var(--accent);
+    }
+    
+    .nav-links a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background: var(--accent);
+        transition: width 0.4s ease;
+    }
+    
+    .nav-links a:hover::after {
+        width: 100%;
+    }
+    
+    .auth-buttons button {
+        padding: 12px 25px;
+        border-radius: 6px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        font-size: 0.9rem;
+    }
+    
+    .login-btn {
+        background: transparent;
+        border: 1px solid var(--primary);
+        color: var(--light);
+        margin-right: 15px;
+    }
+    
+    .login-btn:hover {
+        background: rgba(42, 107, 255, 0.1);
+        box-shadow: 0 0 10px rgba(42, 107, 255, 0.3);
+    }
+    
+    .register-btn {
+        background: var(--primary);
+        border: 1px solid var(--primary);
+        color: white;
+    }
+    
+    .register-btn:hover {
+        background: var(--primary-dark);
+        box-shadow: 0 0 15px rgba(42, 107, 255, 0.5);
+    }
+    
+    .hero {
+        padding: 10rem 0 8rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(42, 107, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.05); }
+    }
+    
+    .hero h1 {
+        font-size: 4.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: 900;
+        letter-spacing: 3px;
+        position: relative;
+        display: inline-block;
+        color: var(--light);
+        animation: pulse 3s infinite alternate;
+    }
+    
+    .hero h1::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 2px;
+        background: var(--gradient);
+    }
+    
+    .hero p {
+        font-size: 1.4rem;
+        max-width: 800px;
+        margin: 0 auto 3rem;
+        color: var(--light);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        line-height: 1.8;
+    }
+    
+    .cta-button {
+        padding: 18px 40px;
+        background: var(--gradient);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        box-shadow: 0 10px 20px rgba(42, 107, 255, 0.3);
+    }
+    
+    .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(42, 107, 255, 0.4);
+    }
+    
+    .features {
+        padding: 6rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .features::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 30%, rgba(42, 107, 255, 0.05) 0%, transparent 20%),
+            radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.05) 0%, transparent 20%);
+        pointer-events: none;
+    }
+    
+    .section-title {
+        text-align: center;
+        margin-bottom: 5rem;
+        position: relative;
+    }
+    
+    .section-title h2 {
+        font-size: 3rem;
+        color: var(--light);
+        margin-bottom: 1.5rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .section-title h2::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 2px;
+        background: var(--gradient);
+    }
+    
+    .section-title p {
+        color: var(--light);
+        max-width: 700px;
+        margin: 0 auto;
+        font-size: 1.2rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        line-height: 1.8;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 3rem;
+    }
+    
+    .feature-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 3rem 2.5rem;
+        transition: var(--transition);
+        border: 1px solid rgba(42, 107, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--primary);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(42, 107, 255, 0.2);
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(42, 107, 255, 0.05) 0%, transparent 50%);
+        z-index: -1;
+    }
+    
+    .feature-icon {
+        font-size: 3.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .feature-icon i {
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .feature-card h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        color: var(--light);
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    
+    .feature-card p {
+        color: var(--light);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        font-weight: 500;
+    }
+    
+    footer {
+        background-color: rgba(10, 15, 25, 0.9);
+        color: white;
+        padding: 5rem 0 2rem;
+        text-align: center;
+        border-top: 1px solid rgba(42, 107, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(15px);
+    }
+    
+    footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--gradient);
+    }
+    
+    .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2.5rem;
+    }
+    
+    .footer-logo {
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: var(--light);
+        letter-spacing: 1.5px;
+    }
+    
+    .footer-logo i {
+        color: var(--primary);
+        margin-right: 10px;
+    }
+    
+    .footer-links {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .footer-links a {
+        color: var(--light);
+        text-decoration: none;
+        position: relative;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: var(--transition);
+        padding: 5px 0;
+    }
+    
+    .footer-links a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background: var(--accent);
+        transition: width 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+        color: var(--accent);
+    }
+    
+    .footer-links a:hover::after {
+        width: 100%;
+    }
+    
+    .social-icons {
+        display: flex;
+        gap: 25px;
+    }
+    
+    .social-icons a {
+        color: var(--light);
+        font-size: 1.8rem;
+        transition: var(--transition);
+        position: relative;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(42, 107, 255, 0.1);
+        border: 1px solid rgba(42, 107, 255, 0.2);
+        overflow: hidden;
+    }
+    
+    .social-icons a:hover {
+        color: var(--accent);
+        background: rgba(42, 107, 255, 0.2);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(42, 107, 255, 0.2);
+    }
+    
+    .copyright {
+        margin-top: 4rem;
+        color: rgba(224, 224, 255, 0.6);
+        font-size: 1rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+    }
+    
+    /* Modal de autenticación */
+    .auth-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 10, 0.9);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(15px);
+    }
+    
+    .auth-container {
+        background: var(--card-bg-solid);
+        border-radius: 15px;
+        width: 100%;
+        max-width: 500px;
+        padding: 3rem;
+        border: 1px solid rgba(42, 107, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(42, 107, 255, 0.2);
+        animation: modal-appear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    @keyframes modal-appear {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .auth-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(42, 107, 255, 0.05) 0%, transparent 50%);
+        z-index: -1;
+    }
+    
+    .auth-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+    }
+    
+    .auth-header h2 {
+        color: var(--light);
+        font-weight: 800;
+        font-size: 2.2rem;
+        letter-spacing: 1.5px;
+    }
+    
+    .close-auth {
+        background: none;
+        border: none;
+        font-size: 2.5rem;
+        cursor: pointer;
+        color: var(--light);
+        transition: var(--transition);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+    
+    .close-auth:hover {
+        color: var(--accent);
+        transform: rotate(90deg);
+    }
+    
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .auth-form input {
+        padding: 15px 20px;
+        background: rgba(10, 15, 25, 0.8);
+        border: 1px solid rgba(42, 107, 255, 0.2);
+        border-radius: 8px;
+        font-size: 1.1rem;
+        color: white;
+        font-family: 'Montserrat', sans-serif;
+        transition: var(--transition);
+        letter-spacing: 1px;
+    }
+    
+    .auth-form input:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: rgba(10, 15, 25, 0.9);
+        box-shadow: 0 0 10px rgba(42, 107, 255, 0.3);
+    }
+    
+    .auth-form input::placeholder {
+        color: rgba(224, 224, 255, 0.6);
+        font-weight: 500;
+    }
+    
+    .auth-submit {
+        padding: 15px;
+        background: var(--gradient);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-top: 1rem;
+        font-size: 1.1rem;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    
+    .auth-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(42, 107, 255, 0.3);
+    }
+    
+    .auth-toggle {
+        text-align: center;
+        margin-top: 2.5rem;
+        color: rgba(224, 224, 255, 0.6);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    
+    .auth-toggle span {
+        color: var(--accent);
+        cursor: pointer;
+        font-weight: 700;
+        transition: var(--transition);
+        letter-spacing: 1px;
+        position: relative;
+    }
+    
+    .auth-toggle span:hover {
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+    
+    .auth-toggle span::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 1px;
+        bottom: -2px;
+        left: 0;
+        background: var(--accent);
+        transition: width 0.3s ease;
+    }
+    
+    .auth-toggle span:hover::after {
+        width: 100%;
+    }
+    
+    .auth-error {
+        color: #ff3366;
+        font-size: 1rem;
+        margin-top: -1rem;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+    }
+    
+    /* Efectos de partículas para el fondo */
+    #particles-js {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        pointer-events: none;
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+        .hero h1 {
+            font-size: 3.5rem;
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        .features-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
         }
-        
-        body {
-            background-color: #f5f7fa;
-            color: var(--dark);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo i {
-            margin-right: 10px;
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-        
-        nav ul li {
-            margin-left: 20px;
-        }
-        
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background 0.3s;
-        }
-        
-        nav ul li a:hover {
-            background: rgba(255,255,255,0.2);
-        }
-        
-        .auth-section {
-            display: flex;
-            align-items: center;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            margin-right: 15px;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background-color: var(--accent);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: #3da98a;
-        }
-        
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid white;
-            color: white;
-        }
-        
-        .btn-outline:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-        
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background-color: #c0392b;
-        }
-        
-        main {
-            padding: 2rem 0;
-            min-height: calc(100vh - 140px);
-        }
-        
-        .page {
+    }
+    
+    @media (max-width: 768px) {
+        .nav-links {
             display: none;
         }
         
-        .page.active {
-            display: block;
+        .hero {
+            padding: 8rem 0 6rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            padding: 0 15px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
         }
         
         .auth-container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 2.5rem 2rem;
+            margin: 0 20px;
         }
         
-        .auth-container h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: var(--primary);
+        .footer-links {
+            flex-direction: column;
+            gap: 20px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .hero h1 {
+            font-size: 2.5rem;
+            letter-spacing: 2px;
         }
         
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .hero p {
             font-size: 1rem;
         }
         
-        .form-control:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
-        }
-        
-        .notebook-container {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .notebook-header {
-            background: var(--primary);
-            color: white;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .date-navigation {
-            display: flex;
-            align-items: center;
-        }
-        
-        .date-display {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin: 0 15px;
-        }
-        
-        .nav-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background 0.3s;
-        }
-        
-        .nav-btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-        
-        .notebook-content {
-            padding: 1.5rem;
-        }
-        
-        .weight-section, .product-section {
-            margin-bottom: 2rem;
-        }
-        
-        .section-title {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: var(--secondary);
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 0.5rem;
-        }
-        
-        .weight-form, .product-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 10px;
-            margin-bottom: 1rem;
-        }
-        
-        @media (max-width: 768px) {
-            .weight-form, .product-form {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .entries-list {
-            border: 1px solid #eee;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .entry-item {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .entry-item:last-child {
-            border-bottom: none;
-        }
-        
-        .entry-item:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .entry-info {
-            flex-grow: 1;
-        }
-        
-        .entry-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            color: #777;
-            transition: color 0.3s;
-        }
-        
-        .action-btn:hover {
-            color: var(--primary);
-        }
-        
-        .like-btn.liked {
-            color: var(--danger);
-        }
-        
-        .comments-section {
-            margin-top: 2rem;
-        }
-        
-        .comment-form {
-            display: flex;
-            margin-bottom: 1rem;
-        }
-        
-        .comment-input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px 0 0 4px;
-        }
-        
-        .comment-submit {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0 15px;
-            border-radius: 0 4px 4px 0;
-            cursor: pointer;
-        }
-        
-        .comments-list {
-            border: 1px solid #eee;
-            border-radius: 4px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .comment-item {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .comment-item:last-child {
-            border-bottom: none;
-        }
-        
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: #777;
-        }
-        
-        .summary-section {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-top: 2rem;
-        }
-        
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        
-        .summary-card {
-            background: white;
-            padding: 1rem;
-            border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-        
-        .summary-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        
-        .profit {
-            color: var(--success);
-        }
-        
-        .loss {
-            color: var(--danger);
-        }
-        
-        footer {
-            background: var(--dark);
-            color: white;
-            text-align: center;
-            padding: 1rem 0;
-            margin-top: 2rem;
-        }
-        
-        .alert {
+        .auth-buttons button {
             padding: 10px 15px;
-            border-radius: 4px;
-            margin-bottom: 1rem;
+            font-size: 0.8rem;
         }
         
-        .alert-error {
-            background: #ffeaea;
-            color: var(--danger);
-            border: 1px solid #f5c6cb;
+        .section-title h2 {
+            font-size: 2rem;
         }
         
-        .alert-success {
-            background: #e8f6e8;
-            color: var(--success);
-            border: 1px solid #c3e6cb;
+        .feature-card {
+            padding: 2rem 1.5rem;
         }
         
-        .hidden {
-            display: none;
+        .auth-container {
+            padding: 2rem 1.5rem;
         }
+        
+        .auth-form input {
+            padding: 12px;
+        }
+    }
     </style>
-    <!-- Firebase App (the core Firebase SDK) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <!-- Firebase Authentication -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    <!-- Cloud Firestore -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
+    <!-- Cargador futurista -->
+    <div class="loader-container" id="loader">
+        <div class="loader-grid"></div>
+        <div class="loader-logo">
+            <i class="fas fa-chart-line"></i>
+            <span>Jayden Company</span>
+        </div>
+        <div class="loader"></div>
+        <div class="loader-text">Inicializando sistema financiero...</div>
+        <div class="loader-dots">
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+            <div class="loader-dot"></div>
+        </div>
+    </div>
+    
+    <div class="grid-overlay"></div>
+    <div id="particles-js"></div>
+    
     <header>
-        <div class="container header-content">
-            <div class="logo">
-                <i>📓</i> Libreta Futurista
-            </div>
+        <div class="container">
             <nav>
-                <ul>
-                    <li><a href="#" id="nav-home">Inicio</a></li>
-                    <li><a href="#" id="nav-notebook">Mi Libreta</a></li>
-                </ul>
-            </nav>
-            <div class="auth-section">
-                <div class="user-info hidden" id="user-info">
-                    <div class="user-avatar" id="user-avatar">U</div>
-                    <span id="user-name">Usuario</span>
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Jayden Company</span>
                 </div>
-                <button class="btn btn-outline hidden" id="logout-btn">Cerrar Sesión</button>
-                <button class="btn btn-primary" id="login-btn">Iniciar Sesión</button>
-            </div>
+                <div class="nav-links">
+                    <a href="beneficio.html">Beneficios</a>
+                    <a href="contacto.html">Contacto</a>
+                </div>
+                <div class="auth-buttons">
+                    <button class="login-btn" id="openLogin">Iniciar Sesión</button>
+                    <button class="register-btn" id="openRegister">Registrarse</button>
+                </div>
+            </nav>
         </div>
     </header>
 
-    <main class="container">
-        <!-- Página de inicio -->
-        <div id="home-page" class="page active">
-            <div class="hero-section" style="text-align: center; padding: 3rem 0;">
-                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary);">Tu Libreta Personal de Productos Futuristas</h1>
-                <p style="font-size: 1.2rem; max-width: 700px; margin: 0 auto 2rem;">Registra tu peso, lleva un control de tus productos futuristas, calcula tus ganancias y comparte tus experiencias.</p>
-                <button class="btn btn-primary" id="get-started-btn" style="font-size: 1.1rem; padding: 12px 24px;">Comenzar Ahora</button>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
-                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <h3 style="color: var(--primary); margin-bottom: 1rem;">📈 Seguimiento de Peso</h3>
-                    <p>Registra tu peso diario y lleva un control de tu progreso con gráficos y estadísticas.</p>
-                </div>
-                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <h3 style="color: var(--primary); margin-bottom: 1rem;">🚀 Productos Futuristas</h3>
-                    <p>Anota tus productos, inversiones, ganancias y pérdidas con cálculos automáticos.</p>
-                </div>
-                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                    <h3 style="color: var(--primary); margin-bottom: 1rem;">💬 Comunidad</h3>
-                    <p>Comparte tus experiencias, comenta y da "me gusta" a las publicaciones de otros usuarios.</p>
-                </div>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Jayden Company</h1>
+                <p>Gestiona tus finanzas de manera inteligente con nuestras herramientas avanzadas de control financiero y análisis de inversiones.</p>
+                <button class="cta-button" id="heroCta">Comenzar Ahora</button>
             </div>
         </div>
+    </section>
 
-        <!-- Página de autenticación -->
-        <div id="auth-page" class="page">
-            <div class="auth-container">
-                <h2 id="auth-title">Iniciar Sesión</h2>
-                <div id="auth-alert" class="alert hidden"></div>
-                <form id="auth-form">
-                    <div class="form-group" id="name-field" style="display: none;">
-                        <label for="name">Nombre</label>
-                        <input type="text" id="name" class="form-control" required>
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nuestras Soluciones</h2>
+                <p>Ofrecemos herramientas avanzadas para el control y optimización de tus finanzas personales y empresariales.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Correo Electrónico</label>
-                        <input type="email" id="email" class="form-control" required>
+                    <h3>Análisis Financiero</h3>
+                    <p>Visualiza tus ingresos, gastos e inversiones con gráficos interactivos y reportes detallados.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-piggy-bank"></i>
                     </div>
-                    <div class="form-group">
-                        <label for="password">Contraseña</label>
-                        <input type="password" id="password" class="form-control" required>
+                    <h3>Planificación de Ahorros</h3>
+                    <p>Establece metas financieras y recibe recomendaciones personalizadas para alcanzarlas.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" id="auth-submit">Iniciar Sesión</button>
-                </form>
-                <div style="text-align: center;">
-                    <a href="#" id="toggle-auth">¿No tienes cuenta? Regístrate</a>
+                    <h3>Seguridad Avanzada</h3>
+                    <p>Tus datos financieros están protegidos con encriptación de última generación.</p>
                 </div>
             </div>
         </div>
-
-        <!-- Página de la libreta -->
-        <div id="notebook-page" class="page">
-            <div class="notebook-container">
-                <div class="notebook-header">
-                    <div class="date-navigation">
-                        <button class="nav-btn" id="prev-date">‹</button>
-                        <div class="date-display" id="current-date">Cargando...</div>
-                        <button class="nav-btn" id="next-date">›</button>
-                    </div>
-                    <button class="btn btn-outline" id="new-page-btn">Nueva Página</button>
-                </div>
-                
-                <div class="notebook-content">
-                    <!-- Sección de peso -->
-                    <div class="weight-section">
-                        <h3 class="section-title">📊 Registro de Peso</h3>
-                        <form class="weight-form" id="weight-form">
-                            <input type="number" step="0.1" class="form-control" id="weight-input" placeholder="Peso (kg)" required>
-                            <input type="text" class="form-control" id="weight-note" placeholder="Nota (opcional)">
-                            <button type="submit" class="btn btn-primary">Agregar</button>
-                        </form>
-                        <div class="entries-list" id="weight-entries">
-                            <!-- Las entradas de peso se cargarán aquí -->
-                        </div>
-                    </div>
-                    
-                    <!-- Sección de productos -->
-                    <div class="product-section">
-                        <h3 class="section-title">🚀 Productos Futuristas</h3>
-                        <form class="product-form" id="product-form">
-                            <input type="text" class="form-control" id="product-name" placeholder="Nombre del producto" required>
-                            <input type="number" step="0.01" class="form-control" id="product-investment" placeholder="Inversión ($)" required>
-                            <button type="submit" class="btn btn-primary">Agregar</button>
-                        </form>
-                        <div class="entries-list" id="product-entries">
-                            <!-- Las entradas de productos se cargarán aquí -->
-                        </div>
-                    </div>
-                    
-                    <!-- Resumen financiero -->
-                    <div class="summary-section">
-                        <h3 class="section-title">💰 Resumen Financiero</h3>
-                        <div class="summary-grid">
-                            <div class="summary-card">
-                                <div>Inversión Total</div>
-                                <div class="summary-value" id="total-investment">$0.00</div>
-                            </div>
-                            <div class="summary-card">
-                                <div>Ganancias</div>
-                                <div class="summary-value profit" id="total-profit">$0.00</div>
-                            </div>
-                            <div class="summary-card">
-                                <div>Pérdidas</div>
-                                <div class="summary-value loss" id="total-loss">$0.00</div>
-                            </div>
-                            <div class="summary-card">
-                                <div>Balance Neto</div>
-                                <div class="summary-value" id="net-balance">$0.00</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Sección de comentarios -->
-                    <div class="comments-section">
-                        <h3 class="section-title">💬 Comentarios del Día</h3>
-                        <form class="comment-form" id="comment-form">
-                            <input type="text" class="comment-input" id="comment-input" placeholder="Escribe un comentario..." required>
-                            <button type="submit" class="comment-submit">Publicar</button>
-                        </form>
-                        <div class="comments-list" id="comments-list">
-                            <!-- Los comentarios se cargarán aquí -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+    </section>
 
     <footer>
         <div class="container">
-            <p>Libreta Futurista &copy; 2023 - Tu compañero para el seguimiento de peso y productos</p>
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-chart-line"></i> Jayden Company
+                </div>
+                <div class="footer-links">
+                    <a href="beneficio.html">Términos</a>
+                    <a href="contacto.html">Soporte</a>
+                </div>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/profile.php?id=61579696913394"><i class="fab fa-facebook-f"></i></a>                    
+                    <a href="https://www.tiktok.com/@beaver_trading_oficial" target="_blank"><i class="fab fa-tiktok"></i></a>
+                     <a href="https://www.youtube.com/@beavertrading2025"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com/weldingmiguel/"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/593986122265" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://t.me/+x8P5ya17Dek4YjBh"><i class="fab fa-telegram-plane"></i></a>                    
+                </div>
+                <div class="copyright">
+                    &copy; 2024 Jayden Company. Todos los derechos reservados.
+                </div>
+            </div>
         </div>
     </footer>
 
+    <!-- Modal de Autenticación -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2 id="authModalTitle">Iniciar Sesión</h2>
+                <button class="close-auth" id="closeAuth">&times;</button>
+            </div>
+            <form class="auth-form" id="loginForm">
+                <div id="authError" class="auth-error"></div>
+                <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+                <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                <button type="submit" class="auth-submit">Acceder</button>
+            </form>
+            <form class="auth-form" id="registerForm" style="display: none;">
+                <div id="registerError" class="auth-error"></div>
+                <input type="text" id="registerName" placeholder="Nombre completo" required>
+                <input type="email" id="registerEmail" placeholder="Correo electrónico" required>
+                <input type="password" id="registerPassword" placeholder="Contraseña" required>
+                <input type="password" id="registerConfirmPassword" placeholder="Confirmar contraseña" required>
+                <button type="submit" class="auth-submit">Crear Cuenta</button>
+            </form>
+            <div class="auth-toggle">
+                <span id="toggleAuthForm">¿No tienes una cuenta? Regístrate</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de partículas -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // Configuración de Firebase
+        // Mostrar cargador por 3 segundos al cargar la página
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('fade-out');
+                
+                setTimeout(function() {
+                    document.getElementById('loader').style.display = 'none';
+                }, 800);
+            }, 3000);
+        });
+        
+        // Función para mostrar el cargador
+        function showLoader() {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+            loader.classList.remove('fade-out');
+        }
+        
+        // Función para ocultar el cargador
+        function hideLoader() {
+            const loader = document.getElementById('loader');
+            loader.classList.add('fade-out');
+            
+            setTimeout(function() {
+                loader.style.display = 'none';
+            }, 800);
+        }
+        
+        // Inicializar partículas
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#2a6bff" },
+                    shape: {
+                        type: "circle",
+                        stroke: { width: 0, color: "#000000" },
+                        polygon: { nb_sides: 5 }
+                    },
+                    opacity: {
+                        value: 0.3,
+                        random: true,
+                        anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
+                    },
+                    size: {
+                        value: 2,
+                        random: true,
+                        anim: { enable: true, speed: 2, size_min: 0.1, sync: false }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#2a6bff",
+                        opacity: 0.2,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 1,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false,
+                        attract: { enable: false, rotateX: 600, rotateY: 1200 }
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "grab" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    },
+                    modes: {
+                        grab: { distance: 140, line_linked: { opacity: 0.5 } },
+                        push: { particles_nb: 4 }
+                    }
+                },
+                retina_detect: true
+            });
+        });
+        
+        // Inicializar Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyB1Cs2os3tTfrMbYSAmDeJAGnP4tTtsFdw",
             authDomain: "beaver-trading.firebaseapp.com",
@@ -602,439 +1107,179 @@
             appId: "1:926610131904:web:c147bd337bd12b4d085625",
             measurementId: "G-1K51WWF2ZJ"
         };
-
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
+        
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Referencias a elementos del DOM
-        const pages = {
-            home: document.getElementById('home-page'),
-            auth: document.getElementById('auth-page'),
-            notebook: document.getElementById('notebook-page')
-        };
+        const database = firebase.database();
         
-        const navHome = document.getElementById('nav-home');
-        const navNotebook = document.getElementById('nav-notebook');
-        const loginBtn = document.getElementById('login-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const getStartedBtn = document.getElementById('get-started-btn');
-        const userInfo = document.getElementById('user-info');
-        const userName = document.getElementById('user-name');
-        const userAvatar = document.getElementById('user-avatar');
+        // Elementos del DOM
+        const authModal = document.getElementById('authModal');
+        const openLogin = document.getElementById('openLogin');
+        const openRegister = document.getElementById('openRegister');
+        const closeAuth = document.getElementById('closeAuth');
+        const authModalTitle = document.getElementById('authModalTitle');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const toggleAuthForm = document.getElementById('toggleAuthForm');
+        const authError = document.getElementById('authError');
+        const registerError = document.getElementById('registerError');
+        const heroCta = document.getElementById('heroCta');
         
-        const authTitle = document.getElementById('auth-title');
-        const authForm = document.getElementById('auth-form');
-        const authSubmit = document.getElementById('auth-submit');
-        const toggleAuth = document.getElementById('toggle-auth');
-        const nameField = document.getElementById('name-field');
-        const authAlert = document.getElementById('auth-alert');
+        // Mostrar modal de login
+        openLogin.addEventListener('click', () => {
+            authModal.style.display = 'flex';
+            loginForm.style.display = 'flex';
+            registerForm.style.display = 'none';
+            authModalTitle.textContent = 'Iniciar Sesión';
+            toggleAuthForm.textContent = '¿No tienes una cuenta? Regístrate';
+            authError.textContent = '';
+            document.body.style.overflow = 'hidden';
+        });
         
-        const currentDateEl = document.getElementById('current-date');
-        const prevDateBtn = document.getElementById('prev-date');
-        const nextDateBtn = document.getElementById('next-date');
-        const newPageBtn = document.getElementById('new-page-btn');
+        // Mostrar modal de registro
+        openRegister.addEventListener('click', () => {
+            authModal.style.display = 'flex';
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'flex';
+            authModalTitle.textContent = 'Crear Cuenta';
+            toggleAuthForm.textContent = '¿Ya tienes una cuenta? Inicia Sesión';
+            registerError.textContent = '';
+            document.body.style.overflow = 'hidden';
+        });
         
-        const weightForm = document.getElementById('weight-form');
-        const productForm = document.getElementById('product-form');
-        const commentForm = document.getElementById('comment-form');
+        // Cerrar modal
+        closeAuth.addEventListener('click', () => {
+            authModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
         
-        const weightEntries = document.getElementById('weight-entries');
-        const productEntries = document.getElementById('product-entries');
-        const commentsList = document.getElementById('comments-list');
-        
-        const totalInvestment = document.getElementById('total-investment');
-        const totalProfit = document.getElementById('total-profit');
-        const totalLoss = document.getElementById('total-loss');
-        const netBalance = document.getElementById('net-balance');
-
-        // Estado de la aplicación
-        let currentUser = null;
-        let currentDate = new Date();
-        let isSignUp = false;
-
-        // Funciones de navegación
-        function showPage(pageId) {
-            Object.values(pages).forEach(page => {
-                page.classList.remove('active');
-            });
-            pages[pageId].classList.add('active');
-        }
-
-        // Funciones de autenticación
-        function showAuthAlert(message, type) {
-            authAlert.textContent = message;
-            authAlert.className = `alert alert-${type}`;
-            authAlert.classList.remove('hidden');
-        }
-
-        function hideAuthAlert() {
-            authAlert.classList.add('hidden');
-        }
-
-        function toggleAuthMode() {
-            isSignUp = !isSignUp;
-            if (isSignUp) {
-                authTitle.textContent = 'Crear Cuenta';
-                authSubmit.textContent = 'Registrarse';
-                toggleAuth.textContent = '¿Ya tienes cuenta? Inicia Sesión';
-                nameField.style.display = 'block';
+        // Alternar entre login y registro
+        toggleAuthForm.addEventListener('click', () => {
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'flex';
+                registerForm.style.display = 'none';
+                authModalTitle.textContent = 'Iniciar Sesión';
+                toggleAuthForm.textContent = '¿No tienes una cuenta? Regístrate';
+                authError.textContent = '';
             } else {
-                authTitle.textContent = 'Iniciar Sesión';
-                authSubmit.textContent = 'Iniciar Sesión';
-                toggleAuth.textContent = '¿No tienes cuenta? Regístrate';
-                nameField.style.display = 'none';
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'flex';
+                authModalTitle.textContent = 'Crear Cuenta';
+                toggleAuthForm.textContent = '¿Ya tienes una cuenta? Inicia Sesión';
+                registerError.textContent = '';
             }
-            hideAuthAlert();
-        }
-
-        async function handleAuthSubmit(e) {
+        });
+        
+        // Cerrar modal al hacer clic fuera
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Login
+        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
             
-            try {
-                if (isSignUp) {
-                    const name = document.getElementById('name').value;
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    await userCredential.user.updateProfile({
-                        displayName: name
-                    });
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Mostrar cargador
+            showLoader();
+            document.querySelector('.loader-text').textContent = 'Verificando credenciales...';
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Login exitoso
+                    document.querySelector('.loader-text').textContent = 'Accediendo al sistema...';
                     
-                    // Crear documento de usuario en Firestore
-                    await db.collection('users').doc(userCredential.user.uid).set({
+                    setTimeout(() => {
+                        authModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        loginForm.reset();
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                })
+                .catch((error) => {
+                    // Ocultar cargador en caso de error
+                    hideLoader();
+                    authError.textContent = error.message;
+                });
+        });
+        
+        // Registro
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                registerError.textContent = 'Las contraseñas no coinciden';
+                return;
+            }
+            
+            if (password.length < 6) {
+                registerError.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                return;
+            }
+            
+            // Mostrar cargador
+            showLoader();
+            document.querySelector('.loader-text').textContent = 'Creando cuenta...';
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Registro exitoso
+                    const user = userCredential.user;
+                    
+                    // Guardar datos adicionales en la base de datos
+                    const userRef = database.ref('users/' + user.uid);
+                    userRef.set({
                         name: name,
                         email: email,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        createdAt: firebase.database.ServerValue.TIMESTAMP,
+                        lastLogin: firebase.database.ServerValue.TIMESTAMP
                     });
-                } else {
-                    await auth.signInWithEmailAndPassword(email, password);
-                }
-            } catch (error) {
-                showAuthAlert(error.message, 'error');
-            }
-        }
-
-        function updateUIForUser(user) {
-            currentUser = user;
-            if (user) {
-                // Usuario ha iniciado sesión
-                userInfo.classList.remove('hidden');
-                logoutBtn.classList.remove('hidden');
-                loginBtn.classList.add('hidden');
-                
-                userName.textContent = user.displayName || 'Usuario';
-                userAvatar.textContent = (user.displayName || 'U').charAt(0).toUpperCase();
-                
-                showPage('notebook');
-                loadNotebookData();
-            } else {
-                // Usuario no ha iniciado sesión
-                userInfo.classList.add('hidden');
-                logoutBtn.classList.add('hidden');
-                loginBtn.classList.remove('hidden');
-                
-                showPage('home');
-            }
-        }
-
-        // Funciones de la libreta
-        function formatDate(date) {
-            return date.toLocaleDateString('es-ES', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        }
-
-        function getDateKey(date) {
-            return date.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-        }
-
-        function updateDateDisplay() {
-            currentDateEl.textContent = formatDate(currentDate);
-        }
-
-        function navigateDate(direction) {
-            const newDate = new Date(currentDate);
-            newDate.setDate(newDate.getDate() + direction);
-            currentDate = newDate;
-            updateDateDisplay();
-            loadNotebookData();
-        }
-
-        async function createNewPage() {
-            const today = new Date();
-            if (getDateKey(today) !== getDateKey(currentDate)) {
-                currentDate = today;
-                updateDateDisplay();
-                await loadNotebookData();
-            }
-        }
-
-        // Funciones para cargar y guardar datos
-        async function loadNotebookData() {
-            if (!currentUser) return;
-            
-            const dateKey = getDateKey(currentDate);
-            const notebookRef = db.collection('notebooks').doc(currentUser.uid).collection('dates').doc(dateKey);
-            
-            try {
-                const doc = await notebookRef.get();
-                
-                // Limpiar listas
-                weightEntries.innerHTML = '';
-                productEntries.innerHTML = '';
-                commentsList.innerHTML = '';
-                
-                // Reiniciar resumen financiero
-                let totalInv = 0;
-                let totalProf = 0;
-                let totalLos = 0;
-                
-                if (doc.exists) {
-                    const data = doc.data();
                     
-                    // Cargar entradas de peso
-                    if (data.weights) {
-                        data.weights.forEach((weight, index) => {
-                            addWeightEntryToDOM(weight, index);
-                        });
-                    }
+                    document.querySelector('.loader-text').textContent = 'Configurando tu cuenta...';
                     
-                    // Cargar entradas de productos
-                    if (data.products) {
-                        data.products.forEach((product, index) => {
-                            addProductEntryToDOM(product, index);
-                            totalInv += product.investment || 0;
-                            
-                            // Calcular ganancias/pérdidas (simulado)
-                            const profitLoss = (product.investment || 0) * (Math.random() > 0.5 ? 0.2 : -0.1);
-                            if (profitLoss > 0) {
-                                totalProf += profitLoss;
-                            } else {
-                                totalLos += Math.abs(profitLoss);
-                            }
-                        });
-                    }
-                    
-                    // Cargar comentarios
-                    if (data.comments) {
-                        data.comments.forEach((comment, index) => {
-                            addCommentToDOM(comment, index);
-                        });
-                    }
-                }
-                
-                // Actualizar resumen financiero
-                updateFinancialSummary(totalInv, totalProf, totalLos);
-                
-            } catch (error) {
-                console.error('Error loading notebook data:', error);
-            }
-        }
-
-        function addWeightEntryToDOM(weight, index) {
-            const entryEl = document.createElement('div');
-            entryEl.className = 'entry-item';
-            entryEl.innerHTML = `
-                <div class="entry-info">
-                    <strong>${weight.value} kg</strong>
-                    ${weight.note ? `<span style="margin-left: 10px; color: #777;">${weight.note}</span>` : ''}
-                </div>
-                <div class="entry-actions">
-                    <button class="action-btn like-btn" data-index="${index}">❤️</button>
-                    <button class="action-btn delete-btn" data-index="${index}">🗑️</button>
-                </div>
-            `;
-            weightEntries.appendChild(entryEl);
-        }
-
-        function addProductEntryToDOM(product, index) {
-            // Calcular ganancia/pérdida simulada
-            const profitLoss = (product.investment || 0) * (Math.random() > 0.5 ? 0.2 : -0.1);
-            const profitLossClass = profitLoss >= 0 ? 'profit' : 'loss';
-            const profitLossSymbol = profitLoss >= 0 ? '+' : '-';
-            
-            const entryEl = document.createElement('div');
-            entryEl.className = 'entry-item';
-            entryEl.innerHTML = `
-                <div class="entry-info">
-                    <strong>${product.name}</strong>
-                    <div>
-                        <span>Inversión: $${product.investment.toFixed(2)}</span>
-                        <span style="margin-left: 15px;" class="${profitLossClass}">
-                            ${profitLossSymbol}$${Math.abs(profitLoss).toFixed(2)}
-                        </span>
-                    </div>
-                </div>
-                <div class="entry-actions">
-                    <button class="action-btn like-btn" data-index="${index}">❤️</button>
-                    <button class="action-btn delete-btn" data-index="${index}">🗑️</button>
-                </div>
-            `;
-            productEntries.appendChild(entryEl);
-        }
-
-        function addCommentToDOM(comment, index) {
-            const commentEl = document.createElement('div');
-            commentEl.className = 'comment-item';
-            commentEl.innerHTML = `
-                <div class="comment-header">
-                    <span>${comment.userName || 'Usuario'}</span>
-                    <span>${new Date(comment.timestamp?.toDate()).toLocaleTimeString()}</span>
-                </div>
-                <div>${comment.text}</div>
-                <div style="margin-top: 8px;">
-                    <button class="action-btn like-btn" data-index="${index}">❤️ ${comment.likes || 0}</button>
-                </div>
-            `;
-            commentsList.appendChild(commentEl);
-        }
-
-        function updateFinancialSummary(investment, profit, loss) {
-            totalInvestment.textContent = `$${investment.toFixed(2)}`;
-            totalProfit.textContent = `$${profit.toFixed(2)}`;
-            totalLoss.textContent = `$${loss.toFixed(2)}`;
-            
-            const net = profit - loss;
-            netBalance.textContent = `$${net.toFixed(2)}`;
-            netBalance.className = `summary-value ${net >= 0 ? 'profit' : 'loss'}`;
-        }
-
-        async function saveWeightEntry(weightValue, note) {
-            if (!currentUser) return;
-            
-            const dateKey = getDateKey(currentDate);
-            const notebookRef = db.collection('notebooks').doc(currentUser.uid).collection('dates').doc(dateKey);
-            
-            try {
-                const weightEntry = {
-                    value: parseFloat(weightValue),
-                    note: note,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                await notebookRef.set({
-                    weights: firebase.firestore.FieldValue.arrayUnion(weightEntry)
-                }, { merge: true });
-                
-                loadNotebookData();
-            } catch (error) {
-                console.error('Error saving weight entry:', error);
-            }
-        }
-
-        async function saveProductEntry(name, investment) {
-            if (!currentUser) return;
-            
-            const dateKey = getDateKey(currentDate);
-            const notebookRef = db.collection('notebooks').doc(currentUser.uid).collection('dates').doc(dateKey);
-            
-            try {
-                const productEntry = {
-                    name: name,
-                    investment: parseFloat(investment),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                await notebookRef.set({
-                    products: firebase.firestore.FieldValue.arrayUnion(productEntry)
-                }, { merge: true });
-                
-                loadNotebookData();
-            } catch (error) {
-                console.error('Error saving product entry:', error);
-            }
-        }
-
-        async function saveComment(text) {
-            if (!currentUser) return;
-            
-            const dateKey = getDateKey(currentDate);
-            const notebookRef = db.collection('notebooks').doc(currentUser.uid).collection('dates').doc(dateKey);
-            
-            try {
-                const comment = {
-                    text: text,
-                    userName: currentUser.displayName || 'Usuario',
-                    userId: currentUser.uid,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    likes: 0
-                };
-                
-                await notebookRef.set({
-                    comments: firebase.firestore.FieldValue.arrayUnion(comment)
-                }, { merge: true });
-                
-                loadNotebookData();
-            } catch (error) {
-                console.error('Error saving comment:', error);
-            }
-        }
-
-        // Event Listeners
-        navHome.addEventListener('click', () => showPage('home'));
-        navNotebook.addEventListener('click', () => {
-            if (currentUser) {
-                showPage('notebook');
-            } else {
-                showPage('auth');
-            }
+                    setTimeout(() => {
+                        authModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        registerForm.reset();
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                })
+                .catch((error) => {
+                    // Ocultar cargador en caso de error
+                    hideLoader();
+                    registerError.textContent = error.message;
+                });
         });
         
-        loginBtn.addEventListener('click', () => showPage('auth'));
-        logoutBtn.addEventListener('click', () => auth.signOut());
-        getStartedBtn.addEventListener('click', () => showPage('auth'));
-        
-        toggleAuth.addEventListener('click', toggleAuthMode);
-        authForm.addEventListener('submit', handleAuthSubmit);
-        
-        prevDateBtn.addEventListener('click', () => navigateDate(-1));
-        nextDateBtn.addEventListener('click', () => navigateDate(1));
-        newPageBtn.addEventListener('click', createNewPage);
-        
-        weightForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const weightValue = document.getElementById('weight-input').value;
-            const note = document.getElementById('weight-note').value;
-            
-            if (weightValue) {
-                saveWeightEntry(weightValue, note);
-                weightForm.reset();
-            }
+        // CTA button
+        heroCta.addEventListener('click', () => {
+            openRegister.click();
         });
         
-        productForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('product-name').value;
-            const investment = document.getElementById('product-investment').value;
-            
-            if (name && investment) {
-                saveProductEntry(name, investment);
-                productForm.reset();
-            }
-        });
-        
-        commentForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const text = document.getElementById('comment-input').value;
-            
-            if (text) {
-                saveComment(text);
-                commentForm.reset();
-            }
-        });
-
-        // Observador de autenticación
+        // Verificar estado de autenticación
         auth.onAuthStateChanged((user) => {
-            updateUIForUser(user);
+            if (user) {
+                // Usuario logueado
+                openLogin.style.display = 'none';
+                openRegister.style.display = 'none';
+                // Aquí podrías mostrar un botón de perfil o logout
+            } else {
+                // Usuario no logueado
+                openLogin.style.display = 'inline-block';
+                openRegister.style.display = 'inline-block';
+            }
         });
-
-        // Inicialización
-        updateDateDisplay();
     </script>
 </body>
 </html>
