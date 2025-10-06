@@ -1,8 +1,3 @@
-# App de Chat Mejorada con Navegación Inferior
-
-Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya Chats, Contactos y Estados. Aquí está el código:
-
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -28,14 +23,16 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         --dark: #0a1929;
         --darker: #051423;
         --light: #ffffff;
-        --gray-light: #f8f9fa;
-        --gray: #6c757d;
-        --gray-dark: #495057;
-        --card-bg: #ffffff;
-        --border: #e9ecef;
+        --gray-light: #1e2a3a;
+        --gray: #8b9cb1;
+        --gray-dark: #6c757d;
+        --card-bg: #15202b;
+        --border: #2d3e50;
+        --text-light: #ffffff;
+        --text-gray: #8b9cb1;
         --transition: all 0.3s ease;
-        --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 5px 20px rgba(0, 0, 0, 0.15);
+        --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 5px 20px rgba(0, 0, 0, 0.4);
     }
     
     * {
@@ -46,8 +43,8 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     }
     
     body {
-        background: var(--gray-light);
-        color: #333;
+        background: var(--darker);
+        color: var(--text-light);
         line-height: 1.6;
         min-height: 100vh;
         padding: 0;
@@ -56,13 +53,14 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     
     /* Header */
     .app-header {
-        background: var(--primary);
-        color: white;
+        background: var(--dark);
+        color: var(--text-light);
         padding: 15px 0;
         position: sticky;
         top: 0;
         z-index: 100;
         box-shadow: var(--shadow);
+        border-bottom: 1px solid var(--border);
     }
     
     .header-content {
@@ -80,6 +78,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         display: flex;
         align-items: center;
         gap: 10px;
+        color: var(--text-light);
     }
     
     .logo img {
@@ -96,7 +95,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     .header-btn {
         background: none;
         border: none;
-        color: white;
+        color: var(--text-light);
         font-size: 1.2rem;
         cursor: pointer;
         transition: var(--transition);
@@ -105,7 +104,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     }
     
     .header-btn:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
     }
     
     /* Main Container */
@@ -113,13 +112,13 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         max-width: 100%;
         margin: 0 auto;
         min-height: calc(100vh - 130px);
-        background: var(--gray-light);
+        background: var(--darker);
     }
     
     /* Navigation Tabs */
     .nav-tabs {
         display: flex;
-        background: var(--card-bg);
+        background: var(--dark);
         border-bottom: 1px solid var(--border);
         position: sticky;
         top: 70px;
@@ -131,7 +130,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         text-align: center;
         padding: 15px 0;
         font-weight: 600;
-        color: var(--gray);
+        color: var(--text-gray);
         cursor: pointer;
         transition: var(--transition);
         border-bottom: 3px solid transparent;
@@ -157,6 +156,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         display: none;
         padding: 15px;
         animation: fadeIn 0.3s ease;
+        background: var(--darker);
     }
     
     .content-section.active {
@@ -174,6 +174,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         border-radius: 12px;
         overflow: hidden;
         box-shadow: var(--shadow);
+        border: 1px solid var(--border);
     }
     
     .chat-item {
@@ -191,7 +192,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     }
     
     .chat-item:hover {
-        background: var(--gray-light);
+        background: var(--dark);
     }
     
     .chat-avatar {
@@ -216,7 +217,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         height: 12px;
         border-radius: 50%;
         background: var(--primary);
-        border: 2px solid white;
+        border: 2px solid var(--card-bg);
     }
     
     .chat-info {
@@ -228,12 +229,12 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         font-weight: 600;
         font-size: 1rem;
         margin-bottom: 4px;
-        color: #333;
+        color: var(--text-light);
     }
     
     .last-message {
         font-size: 0.85rem;
-        color: var(--gray);
+        color: var(--text-gray);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -245,7 +246,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     
     .message-time {
         font-size: 0.75rem;
-        color: var(--gray);
+        color: var(--text-gray);
         margin-bottom: 4px;
     }
     
@@ -264,6 +265,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         border-radius: 12px;
         overflow: hidden;
         box-shadow: var(--shadow);
+        border: 1px solid var(--border);
     }
     
     .contact-item {
@@ -272,10 +274,16 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         gap: 15px;
         padding: 15px;
         border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        transition: var(--transition);
     }
     
     .contact-item:last-child {
         border-bottom: none;
+    }
+    
+    .contact-item:hover {
+        background: var(--dark);
     }
     
     .contact-avatar {
@@ -300,12 +308,12 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         font-weight: 600;
         font-size: 1rem;
         margin-bottom: 4px;
-        color: #333;
+        color: var(--text-light);
     }
     
     .contact-status {
         font-size: 0.85rem;
-        color: var(--gray);
+        color: var(--text-gray);
         display: flex;
         align-items: center;
         gap: 5px;
@@ -318,6 +326,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         padding: 15px;
         margin-bottom: 15px;
         box-shadow: var(--shadow);
+        border: 1px solid var(--border);
     }
     
     .my-status {
@@ -327,6 +336,14 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         padding: 10px 0;
         border-bottom: 1px solid var(--border);
         margin-bottom: 15px;
+        cursor: pointer;
+    }
+    
+    .my-status:hover {
+        background: var(--dark);
+        margin: -10px -15px;
+        padding: 10px 15px;
+        border-radius: 8px;
     }
     
     .status-avatar {
@@ -346,12 +363,12 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     .status-info h3 {
         font-size: 1rem;
         margin-bottom: 5px;
-        color: #333;
+        color: var(--text-light);
     }
     
     .status-info p {
         font-size: 0.85rem;
-        color: var(--gray);
+        color: var(--text-gray);
     }
     
     .recent-updates {
@@ -361,7 +378,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     .recent-updates h3 {
         font-size: 1rem;
         margin-bottom: 10px;
-        color: #333;
+        color: var(--text-light);
     }
     
     .status-item {
@@ -370,10 +387,18 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         gap: 15px;
         padding: 10px 0;
         border-bottom: 1px solid var(--border);
+        cursor: pointer;
     }
     
     .status-item:last-child {
         border-bottom: none;
+    }
+    
+    .status-item:hover {
+        background: var(--dark);
+        margin: -10px -15px;
+        padding: 10px 15px;
+        border-radius: 8px;
     }
     
     .status-avatar-small {
@@ -398,17 +423,17 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         font-weight: 600;
         font-size: 0.9rem;
         margin-bottom: 4px;
-        color: #333;
+        color: var(--text-light);
     }
     
     .status-text {
         font-size: 0.85rem;
-        color: var(--gray);
+        color: var(--text-gray);
     }
     
     .status-time {
         font-size: 0.75rem;
-        color: var(--gray);
+        color: var(--text-gray);
     }
     
     /* Chat View */
@@ -418,7 +443,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         left: 0;
         width: 100%;
         height: 100%;
-        background: var(--gray-light);
+        background: var(--darker);
         z-index: 1000;
         transform: translateX(100%);
         transition: transform 0.3s ease;
@@ -431,19 +456,20 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     }
     
     .chat-header {
-        background: var(--primary);
-        color: white;
+        background: var(--dark);
+        color: var(--text-light);
         padding: 15px;
         display: flex;
         align-items: center;
         gap: 15px;
         box-shadow: var(--shadow);
+        border-bottom: 1px solid var(--border);
     }
     
     .back-button {
         background: none;
         border: none;
-        color: white;
+        color: var(--text-light);
         font-size: 1.3rem;
         cursor: pointer;
         padding: 5px;
@@ -456,6 +482,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     .chat-header-info h3 {
         font-size: 1.1rem;
         margin-bottom: 2px;
+        color: var(--text-light);
     }
     
     .chat-header-info p {
@@ -464,6 +491,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         display: flex;
         align-items: center;
         gap: 5px;
+        color: var(--text-gray);
     }
     
     .chat-messages {
@@ -473,6 +501,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         display: flex;
         flex-direction: column;
         gap: 10px;
+        background: var(--darker);
     }
     
     .message {
@@ -501,7 +530,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         background: var(--card-bg);
         border: 1px solid var(--border);
         border-bottom-left-radius: 4px;
-        color: #333;
+        color: var(--text-light);
     }
     
     .message-content {
@@ -515,11 +544,12 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         opacity: 0.7;
         margin-top: 5px;
         text-align: right;
+        color: rgba(255, 255, 255, 0.6);
     }
     
     .message-input-container {
         padding: 15px;
-        background: var(--card-bg);
+        background: var(--dark);
         border-top: 1px solid var(--border);
         display: flex;
         align-items: center;
@@ -528,19 +558,20 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     
     .message-input-wrapper {
         flex: 1;
-        background: var(--gray-light);
+        background: var(--card-bg);
         border-radius: 25px;
         padding: 5px 15px;
         display: flex;
         align-items: center;
         min-height: 45px;
+        border: 1px solid var(--border);
     }
     
     .message-input {
         flex: 1;
         background: transparent;
         border: none;
-        color: #333;
+        color: var(--text-light);
         font-size: 0.95rem;
         padding: 10px 0;
         resize: none;
@@ -551,10 +582,14 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         line-height: 1.4;
     }
     
+    .message-input::placeholder {
+        color: var(--text-gray);
+    }
+    
     .attach-btn, .emoji-btn {
         background: none;
         border: none;
-        color: var(--gray);
+        color: var(--text-gray);
         font-size: 1.2rem;
         cursor: pointer;
         padding: 8px;
@@ -581,7 +616,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         bottom: 0;
         left: 0;
         width: 100%;
-        background: var(--card-bg);
+        background: var(--dark);
         border-top: 1px solid var(--border);
         display: flex;
         padding: 10px 0;
@@ -592,7 +627,7 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         flex: 1;
         text-align: center;
         padding: 8px 0;
-        color: var(--gray);
+        color: var(--text-gray);
         cursor: pointer;
         transition: var(--transition);
         border: none;
@@ -729,12 +764,12 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
             <button class="back-button" id="backFromChat">
                 <i class="fas fa-arrow-left"></i>
             </button>
-            <div class="chat-avatar">
-                <div class="online-indicator"></div>
+            <div class="chat-avatar" id="chatHeaderAvatar">
+                <div class="online-indicator" id="chatHeaderOnline"></div>
             </div>
             <div class="chat-header-info">
                 <h3 id="chatWithName">Usuario</h3>
-                <p><i class="fas fa-circle"></i> En línea</p>
+                <p id="chatHeaderStatus"><i class="fas fa-circle"></i> En línea</p>
             </div>
         </div>
         
@@ -810,35 +845,14 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
         const backFromChat = document.getElementById('backFromChat');
         const myStatusAvatar = document.getElementById('myStatusAvatar');
         const myStatusName = document.getElementById('myStatusName');
+        const chatHeaderAvatar = document.getElementById('chatHeaderAvatar');
+        const chatHeaderOnline = document.getElementById('chatHeaderOnline');
+        const chatHeaderStatus = document.getElementById('chatHeaderStatus');
         
         // Navegación
         const navTabs = document.querySelectorAll('.nav-tab');
         const navItems = document.querySelectorAll('.nav-item');
         const contentSections = document.querySelectorAll('.content-section');
-        
-        // Generar clave de cifrado para cada chat
-        function generateChatKey(userId1, userId2) {
-            const chatId = [userId1, userId2].sort().join('_');
-            return CryptoJS.SHA256(chatId + '_jayden_chat_key_2024').toString();
-        }
-        
-        // Cifrar mensaje
-        function encryptMessage(message, targetUserId) {
-            const key = generateChatKey(currentUser.uid, targetUserId);
-            return CryptoJS.AES.encrypt(message, key).toString();
-        }
-        
-        // Descifrar mensaje
-        function decryptMessage(encryptedMessage, senderUserId) {
-            try {
-                const key = generateChatKey(currentUser.uid, senderUserId);
-                const bytes = CryptoJS.AES.decrypt(encryptedMessage, key);
-                const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-                return decrypted || '🔒 Mensaje cifrado';
-            } catch (error) {
-                return '🔒 Mensaje cifrado';
-            }
-        }
         
         // Verificar autenticación
         auth.onAuthStateChanged((user) => {
@@ -985,7 +999,8 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
                 const lastMessageTimeElement = document.getElementById(`lastMessageTime-${userId}`);
                 
                 if (message) {
-                    let messageText = message.text ? decryptMessage(message.text, message.senderId) : '';
+                    // Mostrar mensaje sin cifrado en la interfaz
+                    let messageText = message.text || '';
                     
                     if (lastMessageElement) {
                         lastMessageElement.textContent = messageText.substring(0, 30) + (messageText.length > 30 ? '...' : '');
@@ -1085,9 +1100,30 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
             selectedUser = { id: userId, ...user };
             
             document.getElementById('chatWithName').textContent = user.name || 'Usuario';
-            chatView.classList.add('active');
+            chatHeaderAvatar.textContent = user.name ? user.name.charAt(0).toUpperCase() : 'U';
             
+            // Actualizar estado en tiempo real en el header del chat
+            checkUserOnlineStatusForChat(userId);
+            
+            chatView.classList.add('active');
             loadChatMessages(userId);
+        }
+        
+        // Verificar estado para el chat abierto
+        function checkUserOnlineStatusForChat(userId) {
+            const userStatusRef = database.ref('status/' + userId);
+            
+            userStatusRef.on('value', (snapshot) => {
+                const status = snapshot.val();
+                
+                if (status && status.state === 'online') {
+                    chatHeaderOnline.style.display = 'block';
+                    chatHeaderStatus.innerHTML = '<i class="fas fa-circle"></i> En línea';
+                } else {
+                    chatHeaderOnline.style.display = 'none';
+                    chatHeaderStatus.innerHTML = '<i class="fas fa-circle" style="color: #666"></i> Desconectado';
+                }
+            });
         }
         
         // Cargar mensajes del chat
@@ -1110,12 +1146,13 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
             const isSent = message.senderId === currentUser.uid;
             messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
             
-            const decryptedText = message.text ? decryptMessage(message.text, message.senderId) : '';
+            // Mostrar mensaje sin cifrado en la interfaz
+            const messageText = message.text || '';
             
             const time = new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
             messageElement.innerHTML = `
-                <div class="message-content">${decryptedText || ''}</div>
+                <div class="message-content">${messageText}</div>
                 <div class="message-time">${time}</div>
             `;
             
@@ -1132,10 +1169,9 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
                 const messageRef = database.ref('chats/' + chatId).push();
                 const messageId = messageRef.key;
                 
-                const encryptedText = encryptMessage(text, selectedUser.id);
-                
+                // Guardar mensaje SIN cifrado en la base de datos
                 messageRef.set({
-                    text: encryptedText,
+                    text: text, // Sin cifrado
                     senderId: currentUser.uid,
                     timestamp: firebase.database.ServerValue.TIMESTAMP,
                     messageId: messageId
@@ -1163,8 +1199,6 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
             return time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
         
-
-
         // Ajustar altura del textarea
         function adjustTextareaHeight() {
             messageInput.style.height = 'auto';
@@ -1313,9 +1347,8 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
 
                 messages.forEach((message, index) => {
                     setTimeout(() => {
-                        const encryptedText = encryptMessage(message.text, message.senderId === currentUser.uid ? user.id : currentUser.uid);
                         database.ref('chats/' + chatId).push().set({
-                            text: encryptedText,
+                            text: message.text, // Sin cifrado
                             senderId: message.senderId,
                             timestamp: Date.now() - (messages.length - index) * 600000 // 10 minutos entre mensajes
                         });
@@ -1387,10 +1420,3 @@ Voy a crear una app completa con navegación inferior tipo WhatsApp que incluya 
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
