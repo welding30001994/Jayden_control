@@ -68,9 +68,10 @@
     .container {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 0 15px;
     }
     
+    /* Header */
     header {
         background-color: var(--whatsapp-dark);
         color: white;
@@ -90,7 +91,7 @@
     }
     
     .logo {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         font-weight: 900;
         display: flex;
         align-items: center;
@@ -100,19 +101,19 @@
     }
     
     .logo img {
-        height: 40px;
+        height: 35px;
         width: auto;
     }
     
     .user-info {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 12px;
     }
     
     .user-avatar {
-        width: 40px;
-        height: 40px;
+        width: 35px;
+        height: 35px;
         border-radius: 50%;
         background: var(--gradient);
         display: flex;
@@ -120,27 +121,34 @@
         justify-content: center;
         font-weight: bold;
         color: white;
+        font-size: 0.9rem;
+    }
+    
+    .user-name {
+        display: none;
     }
     
     .logout-btn {
-        padding: 8px 15px;
+        padding: 6px 12px;
         background: transparent;
         border: 1px solid var(--primary);
         color: var(--light);
         border-radius: 6px;
         cursor: pointer;
         transition: var(--transition);
+        font-size: 0.8rem;
     }
     
     .logout-btn:hover {
         background: rgba(42, 107, 255, 0.1);
     }
     
+    /* Chat Container - Diseño Desktop por defecto */
     .chat-container {
         display: flex;
         height: calc(100vh - 80px);
-        padding: 20px 0;
-        gap: 20px;
+        padding: 15px 0;
+        gap: 15px;
     }
     
     .users-sidebar {
@@ -153,33 +161,35 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        transition: var(--transition);
     }
     
     .sidebar-header {
         background: var(--whatsapp-dark);
-        padding: 20px;
+        padding: 15px;
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 12px;
     }
     
     .sidebar-header .user-avatar {
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
     }
     
     .sidebar-header-info h3 {
         color: var(--light);
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
     
     .sidebar-header-info p {
         color: rgba(224, 224, 255, 0.7);
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
     
     .search-container {
-        padding: 15px;
+        padding: 12px;
         background: var(--whatsapp-dark);
     }
     
@@ -189,20 +199,21 @@
     
     .search-box input {
         width: 100%;
-        padding: 12px 15px 12px 40px;
+        padding: 10px 12px 10px 35px;
         background: rgba(255, 255, 255, 0.1);
         border: none;
         border-radius: 20px;
         color: white;
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
     
     .search-box i {
         position: absolute;
-        left: 15px;
+        left: 12px;
         top: 50%;
         transform: translateY(-50%);
         color: rgba(224, 224, 255, 0.6);
+        font-size: 0.9rem;
     }
     
     .users-list {
@@ -214,8 +225,8 @@
     .user-item {
         display: flex;
         align-items: center;
-        gap: 15px;
-        padding: 15px;
+        gap: 12px;
+        padding: 12px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         cursor: pointer;
         transition: var(--transition);
@@ -230,8 +241,8 @@
     }
     
     .user-avatar-small {
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
         background: var(--gradient);
         display: flex;
@@ -240,14 +251,15 @@
         font-weight: bold;
         color: white;
         position: relative;
+        font-size: 0.9rem;
     }
     
     .online-indicator {
         position: absolute;
-        bottom: 5px;
-        right: 5px;
-        width: 12px;
-        height: 12px;
+        bottom: 4px;
+        right: 4px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         background: var(--whatsapp-green);
         border: 2px solid var(--card-bg);
@@ -255,16 +267,20 @@
     
     .user-info-small {
         flex: 1;
+        min-width: 0;
     }
     
     .user-name {
         font-weight: 600;
         color: var(--light);
-        font-size: 1.1rem;
+        font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .last-message {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         color: rgba(224, 224, 255, 0.7);
         margin-top: 4px;
         white-space: nowrap;
@@ -273,9 +289,10 @@
     }
     
     .message-time {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         color: rgba(224, 224, 255, 0.5);
         text-align: right;
+        white-space: nowrap;
     }
     
     .chat-area {
@@ -288,15 +305,31 @@
         backdrop-filter: blur(15px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         overflow: hidden;
+        transition: var(--transition);
     }
     
     .chat-header {
-        padding: 15px 20px;
+        padding: 12px 15px;
         background: var(--whatsapp-dark);
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 12px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .back-button {
+        display: none;
+        background: none;
+        border: none;
+        color: rgba(224, 224, 255, 0.7);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: var(--transition);
+        padding: 5px;
+    }
+    
+    .back-button:hover {
+        color: var(--light);
     }
     
     .chat-header-info {
@@ -305,26 +338,27 @@
     
     .chat-header-info h3 {
         color: var(--light);
-        font-size: 1.3rem;
+        font-size: 1.1rem;
     }
     
     .chat-header-info p {
         color: rgba(224, 224, 255, 0.7);
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
     
     .chat-actions {
         display: flex;
-        gap: 15px;
+        gap: 12px;
     }
     
     .chat-action-btn {
         background: none;
         border: none;
         color: rgba(224, 224, 255, 0.7);
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         cursor: pointer;
         transition: var(--transition);
+        padding: 5px;
     }
     
     .chat-action-btn:hover {
@@ -333,11 +367,11 @@
     
     .messages-container {
         flex: 1;
-        padding: 20px;
+        padding: 15px;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
         background: linear-gradient(rgba(10, 15, 25, 0.8), rgba(10, 15, 25, 0.8)), 
                     url('https://raw.githubusercontent.com/welding30001994/Jayden_control/refs/heads/main/jayden.jpeg');
         background-size: cover;
@@ -346,12 +380,13 @@
     }
     
     .message {
-        max-width: 70%;
-        padding: 12px 16px;
+        max-width: 85%;
+        padding: 10px 14px;
         border-radius: 18px;
         position: relative;
         animation: messageAppear 0.3s ease;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
+        word-wrap: break-word;
     }
     
     @keyframes messageAppear {
@@ -377,13 +412,14 @@
     .message-content {
         word-break: break-word;
         line-height: 1.4;
+        font-size: 0.9rem;
     }
     
     .message-image {
-        max-width: 300px;
-        max-height: 300px;
+        max-width: 100%;
+        max-height: 250px;
         border-radius: 12px;
-        margin-top: 8px;
+        margin-top: 6px;
         cursor: pointer;
         transition: var(--transition);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -394,29 +430,30 @@
     }
     
     .message-time {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         color: rgba(224, 224, 255, 0.6);
-        margin-top: 5px;
+        margin-top: 4px;
         text-align: right;
     }
     
     .message-input-container {
-        padding: 15px 20px;
+        padding: 12px 15px;
         background: var(--whatsapp-dark);
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
     }
     
     .emoji-btn, .attach-btn {
         background: none;
         border: none;
         color: rgba(224, 224, 255, 0.7);
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         cursor: pointer;
         transition: var(--transition);
-        padding: 8px;
+        padding: 6px;
         border-radius: 50%;
+        flex-shrink: 0;
     }
     
     .emoji-btn:hover, .attach-btn:hover {
@@ -428,9 +465,10 @@
         flex: 1;
         background: rgba(255, 255, 255, 0.1);
         border-radius: 25px;
-        padding: 5px 15px;
+        padding: 4px 12px;
         display: flex;
         align-items: center;
+        min-height: 40px;
     }
     
     .message-input {
@@ -438,13 +476,14 @@
         background: transparent;
         border: none;
         color: white;
-        font-size: 1rem;
-        padding: 12px 0;
+        font-size: 0.9rem;
+        padding: 8px 0;
         resize: none;
         height: auto;
         min-height: 20px;
-        max-height: 100px;
+        max-height: 80px;
         outline: none;
+        line-height: 1.4;
     }
     
     .message-input::placeholder {
@@ -455,15 +494,16 @@
         background: var(--whatsapp-green);
         border: none;
         color: white;
-        width: 45px;
-        height: 45px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         cursor: pointer;
         transition: var(--transition);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.2rem;
+        font-size: 1rem;
+        flex-shrink: 0;
     }
     
     .send-button:hover {
@@ -483,100 +523,396 @@
         justify-content: center;
         color: rgba(224, 224, 255, 0.6);
         text-align: center;
-        padding: 40px;
+        padding: 30px;
         background: rgba(10, 15, 25, 0.5);
     }
     
     .empty-chat i {
-        font-size: 5rem;
-        margin-bottom: 20px;
+        font-size: 4rem;
+        margin-bottom: 15px;
         color: rgba(42, 107, 255, 0.3);
     }
     
     .empty-chat h3 {
-        font-size: 1.8rem;
-        margin-bottom: 10px;
+        font-size: 1.5rem;
+        margin-bottom: 8px;
         color: var(--light);
     }
     
     .empty-chat p {
-        font-size: 1.1rem;
-        max-width: 400px;
-        line-height: 1.6;
+        font-size: 0.9rem;
+        max-width: 350px;
+        line-height: 1.5;
     }
     
     .emoji-picker {
         position: absolute;
-        bottom: 80px;
-        right: 20px;
+        bottom: 70px;
+        right: 15px;
         background: var(--card-bg-solid);
         border-radius: 12px;
-        padding: 15px;
+        padding: 12px;
         border: 1px solid rgba(42, 107, 255, 0.2);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         display: none;
         z-index: 1000;
-        max-width: 300px;
+        max-width: 280px;
+        max-height: 200px;
+        overflow-y: auto;
     }
     
     .emoji-picker h4 {
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         color: var(--light);
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
     
     .emoji-grid {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        gap: 8px;
+        gap: 6px;
     }
     
     .emoji-item {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         cursor: pointer;
         text-align: center;
-        padding: 5px;
-        border-radius: 8px;
+        padding: 4px;
+        border-radius: 6px;
         transition: var(--transition);
     }
     
     .emoji-item:hover {
         background: rgba(42, 107, 255, 0.2);
-        transform: scale(1.2);
+        transform: scale(1.1);
     }
     
     /* Scrollbar personalizado */
     .users-list::-webkit-scrollbar,
-    .messages-container::-webkit-scrollbar {
-        width: 6px;
+    .messages-container::-webkit-scrollbar,
+    .emoji-picker::-webkit-scrollbar {
+        width: 5px;
     }
     
     .users-list::-webkit-scrollbar-track,
-    .messages-container::-webkit-scrollbar-track {
+    .messages-container::-webkit-scrollbar-track,
+    .emoji-picker::-webkit-scrollbar-track {
         background: rgba(255, 255, 255, 0.1);
         border-radius: 3px;
     }
     
     .users-list::-webkit-scrollbar-thumb,
-    .messages-container::-webkit-scrollbar-thumb {
+    .messages-container::-webkit-scrollbar-thumb,
+    .emoji-picker::-webkit-scrollbar-thumb {
         background: var(--primary);
         border-radius: 3px;
     }
     
-    /* Responsive */
-    @media (max-width: 768px) {
+    /* ===== RESPONSIVE DESIGN ===== */
+    
+    /* Tablets (768px - 1024px) */
+    @media (max-width: 1024px) {
+        .container {
+            padding: 0 10px;
+        }
+        
         .chat-container {
-            flex-direction: column;
-            height: auto;
+            height: calc(100vh - 70px);
+            padding: 10px 0;
+            gap: 10px;
         }
         
         .users-sidebar {
+            width: 300px;
+        }
+        
+        .message {
+            max-width: 80%;
+        }
+    }
+    
+    /* Tablets pequeñas y móviles grandes (600px - 768px) */
+    @media (max-width: 768px) {
+        .logo span {
+            display: none;
+        }
+        
+        .logo {
+            font-size: 1.2rem;
+        }
+        
+        .logo img {
+            height: 30px;
+        }
+        
+        .user-name {
+            display: none;
+        }
+        
+        .chat-container {
+            height: calc(100vh - 60px);
+            padding: 8px 0;
+            gap: 8px;
+        }
+        
+        .users-sidebar {
+            width: 280px;
+        }
+        
+        .sidebar-header {
+            padding: 12px;
+        }
+        
+        .search-container {
+            padding: 10px;
+        }
+        
+        .user-item {
+            padding: 10px;
+        }
+        
+        .message {
+            max-width: 85%;
+            padding: 8px 12px;
+        }
+        
+        .message-content {
+            font-size: 0.85rem;
+        }
+        
+        .message-image {
+            max-height: 200px;
+        }
+    }
+    
+    /* Móviles (480px - 600px) */
+    @media (max-width: 600px) {
+        .container {
+            padding: 0 5px;
+        }
+        
+        header {
+            padding: 0.8rem 0;
+        }
+        
+        .chat-container {
+            height: calc(100vh - 60px);
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        /* En móvil: mostrar solo lista de contactos o solo chat */
+        .users-sidebar {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 400px;
+            height: 100%;
+            z-index: 10;
+            transform: translateX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .users-sidebar.hidden {
+            transform: translateX(-100%);
         }
         
         .chat-area {
-            height: 500px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .chat-area.active {
+            transform: translateX(0);
+        }
+        
+        .back-button {
+            display: block;
+        }
+        
+        .message {
+            max-width: 90%;
+        }
+        
+        .message-input-container {
+            padding: 10px 12px;
+        }
+        
+        .emoji-picker {
+            bottom: 60px;
+            right: 10px;
+            max-width: 250px;
+            max-height: 180px;
+        }
+        
+        .empty-chat {
+            padding: 20px;
+        }
+        
+        .empty-chat i {
+            font-size: 3rem;
+        }
+        
+        .empty-chat h3 {
+            font-size: 1.3rem;
+        }
+        
+        .empty-chat p {
+            font-size: 0.85rem;
+        }
+    }
+    
+    /* Móviles pequeños (hasta 480px) */
+    @media (max-width: 480px) {
+        .logo {
+            font-size: 1rem;
+        }
+        
+        .logo img {
+            height: 25px;
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            font-size: 0.8rem;
+        }
+        
+        .logout-btn {
+            padding: 5px 10px;
+            font-size: 0.75rem;
+        }
+        
+        .sidebar-header .user-avatar {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .sidebar-header-info h3 {
+            font-size: 1rem;
+        }
+        
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .user-name {
+            font-size: 0.9rem;
+        }
+        
+        .last-message {
+            font-size: 0.75rem;
+        }
+        
+        .chat-header {
+            padding: 10px 12px;
+        }
+        
+        .chat-header-info h3 {
+            font-size: 1rem;
+        }
+        
+        .messages-container {
+            padding: 12px;
+        }
+        
+        .message {
+            max-width: 95%;
+            padding: 8px 10px;
+        }
+        
+        .message-content {
+            font-size: 0.8rem;
+        }
+        
+        .message-image {
+            max-height: 180px;
+        }
+        
+        .message-input-wrapper {
+            min-height: 35px;
+        }
+        
+        .message-input {
+            font-size: 0.85rem;
+            padding: 6px 0;
+        }
+        
+        .send-button {
+            width: 35px;
+            height: 35px;
+            font-size: 0.9rem;
+        }
+        
+        .emoji-btn, .attach-btn {
+            font-size: 1rem;
+            padding: 5px;
+        }
+        
+        .emoji-picker {
+            max-width: 220px;
+            max-height: 160px;
+            padding: 10px;
+        }
+        
+        .emoji-grid {
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+        }
+        
+        .emoji-item {
+            font-size: 1.1rem;
+            padding: 3px;
+        }
+    }
+    
+    /* Pantallas muy pequeñas (hasta 360px) */
+    @media (max-width: 360px) {
+        .container {
+            padding: 0 3px;
+        }
+        
+        .sidebar-header {
+            padding: 10px;
+        }
+        
+        .search-container {
+            padding: 8px;
+        }
+        
+        .user-item {
+            padding: 8px;
+            gap: 10px;
+        }
+        
+        .user-avatar-small {
+            width: 35px;
+            height: 35px;
+            font-size: 0.8rem;
+        }
+        
+        .chat-header {
+            padding: 8px 10px;
+        }
+        
+        .messages-container {
+            padding: 10px;
+        }
+        
+        .message-input-container {
+            padding: 8px 10px;
+        }
+        
+        .emoji-picker {
+            max-width: 200px;
+            max-height: 140px;
         }
     }
     </style>
@@ -593,8 +929,8 @@
                 </div>
                 <div class="user-info">
                     <div class="user-avatar" id="userAvatar">U</div>
-                    <span id="userName">Usuario</span>
-                    <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
+                    <span class="user-name" id="userName">Usuario</span>
+                    <button class="logout-btn" id="logoutBtn">Salir</button>
                 </div>
             </nav>
         </div>
@@ -603,7 +939,7 @@
     <div class="container">
         <div class="chat-container">
             <!-- Sidebar de contactos -->
-            <div class="users-sidebar">
+            <div class="users-sidebar" id="usersSidebar">
                 <div class="sidebar-header">
                     <div class="user-avatar" id="currentUserAvatar">U</div>
                     <div class="sidebar-header-info">
@@ -615,7 +951,7 @@
                 <div class="search-container">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="searchUsers" placeholder="Buscar o empezar un chat nuevo">
+                        <input type="text" id="searchUsers" placeholder="Buscar contactos...">
                     </div>
                 </div>
                 
@@ -625,8 +961,11 @@
             </div>
             
             <!-- Área de chat -->
-            <div class="chat-area">
+            <div class="chat-area" id="chatArea">
                 <div class="chat-header" id="chatHeader" style="display: none;">
+                    <button class="back-button" id="backButton">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
                     <div class="user-avatar-small">
                         <div class="online-indicator"></div>
                     </div>
@@ -646,7 +985,7 @@
                         <i class="fas fa-comments"></i>
                         <h3>Bienvenido a Jayden Chat</h3>
                         <p>Selecciona un contacto de la lista para comenzar una conversación</p>
-                        <p style="margin-top: 20px; font-size: 0.9rem; color: rgba(224,224,255,0.5);">
+                        <p style="margin-top: 15px; font-size: 0.8rem; color: rgba(224,224,255,0.5);">
                             <i class="fas fa-lock"></i> Tus mensajes están cifrados de extremo a extremo
                         </p>
                     </div>
@@ -718,12 +1057,16 @@
         const emojiButton = document.getElementById('emojiButton');
         const emojiPicker = document.getElementById('emojiPicker');
         const emojiGrid = document.getElementById('emojiGrid');
+        const usersSidebar = document.getElementById('usersSidebar');
+        const chatArea = document.getElementById('chatArea');
+        const backButton = document.getElementById('backButton');
         
         // Variables globales
         let currentUser = null;
         let selectedUser = null;
         let usersRef = null;
         let messagesRef = null;
+        let isMobile = window.innerWidth <= 600;
         
         // Emojis para el selector
         const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠', '😈', '👿', '👹', '👺', '🤡', '💩', '👻', '💀', '☠️', '👽', '👾', '🤖', '🎃', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾'];
@@ -736,6 +1079,7 @@
                 loadUsers();
                 setupPresence();
                 setupEmojiPicker();
+                setupResponsive();
             } else {
                 window.location.href = 'index.html';
             }
@@ -910,6 +1254,12 @@
             // Cargar mensajes
             loadMessages(userId);
             
+            // En móvil: cambiar a vista de chat
+            if (isMobile) {
+                usersSidebar.classList.add('hidden');
+                chatArea.classList.add('active');
+            }
+            
             // Enfocar el campo de texto
             messageInput.focus();
         }
@@ -1051,6 +1401,32 @@
             // Prevenir que el clic en el selector lo cierre
             emojiPicker.addEventListener('click', (e) => {
                 e.stopPropagation();
+            });
+        }
+        
+        // Configurar responsive
+        function setupResponsive() {
+            // Detectar cambios de tamaño de pantalla
+            window.addEventListener('resize', () => {
+                isMobile = window.innerWidth <= 600;
+                
+                if (!isMobile) {
+                    // En desktop: mostrar ambos paneles
+                    usersSidebar.classList.remove('hidden');
+                    chatArea.classList.remove('active');
+                } else if (!selectedUser) {
+                    // En móvil sin chat seleccionado: mostrar solo lista
+                    usersSidebar.classList.remove('hidden');
+                    chatArea.classList.remove('active');
+                }
+            });
+            
+            // Botón para volver a la lista en móvil
+            backButton.addEventListener('click', () => {
+                if (isMobile) {
+                    usersSidebar.classList.remove('hidden');
+                    chatArea.classList.remove('active');
+                }
             });
         }
         
