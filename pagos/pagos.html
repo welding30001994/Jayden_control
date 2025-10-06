@@ -128,7 +128,8 @@
     }
     
     .user-name {
-        display: none;
+        font-size: 0.9rem;
+        color: var(--light);
     }
     
     .header-actions {
@@ -295,7 +296,7 @@
         min-width: 0;
     }
     
-    .user-name {
+    .user-name-small {
         font-weight: 600;
         color: var(--light);
         font-size: 1rem;
@@ -1010,7 +1011,7 @@
             height: 40px;
         }
         
-        .user-name {
+        .user-name-small {
             font-size: 0.9rem;
         }
         
@@ -1351,7 +1352,8 @@
             try {
                 const key = generateEncryptionKey();
                 const bytes = CryptoJS.AES.decrypt(encryptedMessage, key);
-                return bytes.toString(CryptoJS.enc.Utf8);
+                const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+                return decrypted || '🔒 Mensaje cifrado';
             } catch (error) {
                 console.error('Error al descifrar mensaje:', error);
                 return '🔒 Mensaje cifrado no disponible';
@@ -1387,10 +1389,19 @@
                     currentUserName.textContent = userData.name;
                     currentUserAvatar.textContent = userData.name.charAt(0).toUpperCase();
                 } else {
-                    userName.textContent = user.email;
-                    userAvatar.textContent = user.email.charAt(0).toUpperCase();
-                    currentUserName.textContent = user.email;
-                    currentUserAvatar.textContent = user.email.charAt(0).toUpperCase();
+                    // Si no hay datos, usar el email
+                    const displayName = user.email.split('@')[0];
+                    userName.textContent = displayName;
+                    userAvatar.textContent = displayName.charAt(0).toUpperCase();
+                    currentUserName.textContent = displayName;
+                    currentUserAvatar.textContent = displayName.charAt(0).toUpperCase();
+                    
+                    // Guardar el nombre en la base de datos
+                    database.ref('users/' + user.uid).set({
+                        name: displayName,
+                        email: user.email,
+                        createdAt: firebase.database.ServerValue.TIMESTAMP
+                    });
                 }
             });
         }
@@ -1411,6 +1422,8 @@
                             createUserItem(userId, user);
                         }
                     });
+                } else {
+                    usersList.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(224,224,255,0.6);">No hay otros usuarios registrados</div>';
                 }
             });
         }
@@ -1429,7 +1442,7 @@
                     <div class="online-indicator" id="onlineIndicator-${userId}"></div>
                 </div>
                 <div class="user-info-small">
-                    <div class="user-name">${user.name || 'Usuario'}</div>
+                    <div class="user-name-small">${user.name || 'Usuario'}</div>
                     <div class="last-message" id="lastMessage-${userId}">Haz clic para chatear</div>
                 </div>
                 <div class="message-time" id="lastMessageTime-${userId}"></div>
@@ -1838,7 +1851,7 @@
             const userItems = document.querySelectorAll('.user-item');
             
             userItems.forEach(item => {
-                const userNameElement = item.querySelector('.user-name');
+                const userNameElement = item.querySelector('.user-name-small');
                 const userNameText = userNameElement.textContent.toLowerCase();
                 
                 if (userNameText.includes(searchTerm)) {
