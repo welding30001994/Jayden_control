@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jayden Company - Chat Seguro</title>
+    <title>Jayden Chat - Comunicación Segura</title>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
@@ -17,23 +17,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
     :root {
-        --primary: #2a6bff;
-        --primary-dark: #1a4fc4;
-        --accent: #00d4ff;
-        --accent-glow: rgba(0, 212, 255, 0.4);
-        --dark: #0f1422;
-        --darker: #0a0e18;
-        --light: #f0f4ff;
-        --card-bg: rgba(20, 25, 40, 0.7);
-        --card-bg-solid: rgba(20, 25, 40, 0.95);
-        --neon-glow: 0 0 10px var(--accent), 0 0 20px rgba(0, 212, 255, 0.3);
-        --neon-glow-strong: 0 0 15px var(--accent), 0 0 30px rgba(0, 212, 255, 0.4);
+        --primary: #00C851;
+        --primary-dark: #009624;
+        --accent: #00ff88;
+        --accent-glow: rgba(0, 255, 136, 0.4);
+        --dark: #0a1929;
+        --darker: #051423;
+        --light: #f0fff8;
+        --card-bg: rgba(20, 40, 30, 0.8);
+        --card-bg-solid: rgba(20, 40, 30, 0.95);
+        --neon-glow: 0 0 10px var(--accent), 0 0 20px rgba(0, 255, 136, 0.3);
+        --neon-glow-strong: 0 0 15px var(--accent), 0 0 30px rgba(0, 255, 136, 0.4);
         --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-        --whatsapp-green: #25D366;
-        --whatsapp-dark: #075E54;
-        --whatsapp-light: #128C7E;
-        --danger: #ff4757;
+        --whatsapp-green: #00C851;
+        --whatsapp-dark: #007e33;
+        --whatsapp-light: #00E676;
+        --danger: #ff4444;
+        --warning: #ffbb33;
+        --info: #33b5e5;
     }
     
     * {
@@ -60,8 +62,8 @@
         width: 100%;
         height: 100%;
         background: 
-            linear-gradient(rgba(42, 107, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(42, 107, 255, 0.03) 1px, transparent 1px);
+            linear-gradient(rgba(0, 200, 81, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 200, 81, 0.03) 1px, transparent 1px);
         background-size: 50px 50px;
         pointer-events: none;
         z-index: -1;
@@ -79,12 +81,12 @@
         background-color: var(--whatsapp-dark);
         color: white;
         padding: 1rem 0;
-        border-bottom: 1px solid rgba(42, 107, 255, 0.2);
+        border-bottom: 1px solid rgba(0, 200, 81, 0.3);
         backdrop-filter: blur(15px);
         position: sticky;
         top: 0;
         z-index: 100;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
     }
     
     nav {
@@ -106,6 +108,7 @@
     .logo img {
         height: 35px;
         width: auto;
+        border-radius: 8px;
     }
     
     .user-info {
@@ -115,8 +118,8 @@
     }
     
     .user-avatar {
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         background: var(--gradient);
         display: flex;
@@ -124,12 +127,14 @@
         justify-content: center;
         font-weight: bold;
         color: white;
-        font-size: 0.9rem;
+        font-size: 1rem;
+        box-shadow: 0 4px 10px rgba(0, 200, 81, 0.3);
     }
     
     .user-name {
         font-size: 0.9rem;
         color: var(--light);
+        font-weight: 600;
     }
     
     .header-actions {
@@ -140,7 +145,7 @@
     .header-btn {
         background: none;
         border: none;
-        color: rgba(224, 224, 255, 0.7);
+        color: rgba(224, 255, 240, 0.8);
         font-size: 1.1rem;
         cursor: pointer;
         transition: var(--transition);
@@ -149,23 +154,27 @@
     }
     
     .header-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.15);
         color: var(--light);
+        transform: scale(1.1);
     }
     
     .logout-btn {
-        padding: 6px 12px;
-        background: transparent;
-        border: 1px solid var(--primary);
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(0, 200, 81, 0.5);
         color: var(--light);
-        border-radius: 6px;
+        border-radius: 8px;
         cursor: pointer;
         transition: var(--transition);
         font-size: 0.8rem;
+        font-weight: 600;
     }
     
     .logout-btn:hover {
-        background: rgba(42, 107, 255, 0.1);
+        background: rgba(0, 200, 81, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 200, 81, 0.3);
     }
     
     /* Chat Container */
@@ -177,12 +186,12 @@
     }
     
     .users-sidebar {
-        width: 350px;
+        width: 380px;
         background: var(--card-bg);
-        border-radius: 12px;
-        border: 1px solid rgba(42, 107, 255, 0.1);
+        border-radius: 16px;
+        border: 1px solid rgba(0, 200, 81, 0.2);
         backdrop-filter: blur(15px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -191,31 +200,37 @@
     
     .sidebar-header {
         background: var(--whatsapp-dark);
-        padding: 15px;
+        padding: 20px;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 15px;
+        border-bottom: 1px solid rgba(0, 200, 81, 0.2);
     }
     
     .sidebar-header .user-avatar {
-        width: 45px;
-        height: 45px;
-        font-size: 1rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
     }
     
     .sidebar-header-info h3 {
         color: var(--light);
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+        margin-bottom: 4px;
     }
     
     .sidebar-header-info p {
-        color: rgba(224, 224, 255, 0.7);
-        font-size: 0.8rem;
+        color: rgba(224, 255, 240, 0.8);
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
     
     .search-container {
-        padding: 12px;
+        padding: 15px;
         background: var(--whatsapp-dark);
+        border-bottom: 1px solid rgba(0, 200, 81, 0.2);
     }
     
     .search-box {
@@ -224,21 +239,27 @@
     
     .search-box input {
         width: 100%;
-        padding: 10px 12px 10px 35px;
-        background: rgba(255, 255, 255, 0.1);
+        padding: 12px 15px 12px 40px;
+        background: rgba(255, 255, 255, 0.12);
         border: none;
-        border-radius: 20px;
+        border-radius: 25px;
         color: white;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        transition: var(--transition);
+    }
+    
+    .search-box input:focus {
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 0 2px rgba(0, 200, 81, 0.3);
     }
     
     .search-box i {
         position: absolute;
-        left: 12px;
+        left: 15px;
         top: 50%;
         transform: translateY(-50%);
-        color: rgba(224, 224, 255, 0.6);
-        font-size: 0.9rem;
+        color: rgba(224, 255, 240, 0.7);
+        font-size: 1rem;
     }
     
     .users-list {
@@ -250,25 +271,27 @@
     .user-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        gap: 15px;
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         cursor: pointer;
         transition: var(--transition);
         position: relative;
     }
     
     .user-item:hover {
-        background: rgba(42, 107, 255, 0.1);
+        background: rgba(0, 200, 81, 0.1);
+        transform: translateX(5px);
     }
     
     .user-item.active {
-        background: rgba(42, 107, 255, 0.2);
+        background: rgba(0, 200, 81, 0.15);
+        border-left: 4px solid var(--whatsapp-green);
     }
     
     .user-avatar-small {
-        width: 45px;
-        height: 45px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         background: var(--gradient);
         display: flex;
@@ -277,18 +300,20 @@
         font-weight: bold;
         color: white;
         position: relative;
-        font-size: 0.9rem;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 10px rgba(0, 200, 81, 0.3);
     }
     
     .online-indicator {
         position: absolute;
-        bottom: 4px;
-        right: 4px;
-        width: 10px;
-        height: 10px;
+        bottom: 5px;
+        right: 5px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
         background: var(--whatsapp-green);
         border: 2px solid var(--card-bg);
+        box-shadow: 0 0 10px var(--whatsapp-green);
     }
     
     .user-info-small {
@@ -297,28 +322,39 @@
     }
     
     .user-name-small {
-        font-weight: 600;
+        font-weight: 700;
         color: var(--light);
-        font-size: 1rem;
+        font-size: 1.05rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        margin-bottom: 4px;
     }
     
     .last-message {
-        font-size: 0.8rem;
-        color: rgba(224, 224, 255, 0.7);
-        margin-top: 4px;
+        font-size: 0.85rem;
+        color: rgba(224, 255, 240, 0.7);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
     
     .message-time {
-        font-size: 0.7rem;
-        color: rgba(224, 224, 255, 0.5);
+        font-size: 0.75rem;
+        color: rgba(224, 255, 240, 0.6);
         text-align: right;
         white-space: nowrap;
+        margin-bottom: 4px;
+    }
+    
+    .unread-badge {
+        background: var(--whatsapp-green);
+        color: white;
+        border-radius: 12px;
+        padding: 2px 8px;
+        font-size: 0.7rem;
+        font-weight: bold;
+        margin-top: 4px;
     }
     
     .chat-area {
@@ -326,36 +362,38 @@
         display: flex;
         flex-direction: column;
         background: var(--card-bg);
-        border-radius: 12px;
-        border: 1px solid rgba(42, 107, 255, 0.1);
+        border-radius: 16px;
+        border: 1px solid rgba(0, 200, 81, 0.2);
         backdrop-filter: blur(15px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         overflow: hidden;
         transition: var(--transition);
     }
     
     .chat-header {
-        padding: 12px 15px;
+        padding: 15px 20px;
         background: var(--whatsapp-dark);
         display: flex;
         align-items: center;
-        gap: 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        gap: 15px;
+        border-bottom: 1px solid rgba(0, 200, 81, 0.2);
     }
     
     .back-button {
         display: none;
         background: none;
         border: none;
-        color: rgba(224, 224, 255, 0.7);
-        font-size: 1.2rem;
+        color: rgba(224, 255, 240, 0.8);
+        font-size: 1.3rem;
         cursor: pointer;
         transition: var(--transition);
-        padding: 5px;
+        padding: 8px;
+        border-radius: 50%;
     }
     
     .back-button:hover {
         color: var(--light);
+        background: rgba(255, 255, 255, 0.1);
     }
     
     .chat-header-info {
@@ -364,41 +402,48 @@
     
     .chat-header-info h3 {
         color: var(--light);
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+        margin-bottom: 4px;
     }
     
     .chat-header-info p {
-        color: rgba(224, 224, 255, 0.7);
-        font-size: 0.8rem;
+        color: rgba(224, 255, 240, 0.8);
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
     
     .chat-actions {
         display: flex;
-        gap: 12px;
+        gap: 15px;
     }
     
     .chat-action-btn {
         background: none;
         border: none;
-        color: rgba(224, 224, 255, 0.7);
-        font-size: 1.1rem;
+        color: rgba(224, 255, 240, 0.8);
+        font-size: 1.2rem;
         cursor: pointer;
         transition: var(--transition);
-        padding: 5px;
+        padding: 8px;
+        border-radius: 50%;
     }
     
     .chat-action-btn:hover {
         color: var(--light);
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(1.1);
     }
     
     .messages-container {
         flex: 1;
-        padding: 15px;
+        padding: 20px;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        gap: 8px;
-        background: linear-gradient(rgba(10, 15, 25, 0.8), rgba(10, 15, 25, 0.8)), 
+        gap: 10px;
+        background: linear-gradient(rgba(10, 25, 20, 0.9), rgba(10, 25, 20, 0.9)), 
                     url('https://raw.githubusercontent.com/welding30001994/Jayden_control/refs/heads/main/jayden.jpeg');
         background-size: cover;
         background-position: center;
@@ -407,17 +452,18 @@
     
     .message {
         max-width: 70%;
-        padding: 10px 14px;
+        padding: 12px 16px;
         border-radius: 18px;
         position: relative;
         animation: messageAppear 0.3s ease;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
         word-wrap: break-word;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     
     @keyframes messageAppear {
-        0% { opacity: 0; transform: translateY(10px); }
-        100% { opacity: 1; transform: translateY(0); }
+        0% { opacity: 0; transform: translateY(10px) scale(0.95); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
     }
     
     .message.sent {
@@ -430,8 +476,8 @@
     
     .message.received {
         align-self: flex-start;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-bottom-left-radius: 4px;
         color: var(--light);
         margin-right: auto;
@@ -440,34 +486,36 @@
     .message-content {
         word-break: break-word;
         line-height: 1.4;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
     }
     
     .message-image {
         max-width: 100%;
-        max-height: 250px;
+        max-height: 280px;
         border-radius: 12px;
-        margin-top: 6px;
+        margin-top: 8px;
         cursor: pointer;
         transition: var(--transition);
         border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
     
     .message-image:hover {
         transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
     
     .message-time {
-        font-size: 0.65rem;
-        color: rgba(224, 224, 255, 0.6);
-        margin-top: 4px;
+        font-size: 0.7rem;
+        color: rgba(224, 255, 240, 0.6);
+        margin-top: 6px;
         text-align: right;
     }
     
     .message-actions {
         position: absolute;
-        top: 5px;
-        right: 5px;
+        top: 8px;
+        right: 8px;
         display: none;
         gap: 5px;
     }
@@ -477,22 +525,23 @@
     }
     
     .message-action-btn {
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.6);
         border: none;
         color: white;
-        width: 25px;
-        height: 25px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.7rem;
+        font-size: 0.8rem;
         transition: var(--transition);
     }
     
     .message-action-btn:hover {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.8);
+        transform: scale(1.1);
     }
     
     .delete-btn {
@@ -500,38 +549,46 @@
     }
     
     .message-input-container {
-        padding: 12px 15px;
+        padding: 15px 20px;
         background: var(--whatsapp-dark);
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
+        border-top: 1px solid rgba(0, 200, 81, 0.2);
     }
     
     .emoji-btn, .attach-btn {
         background: none;
         border: none;
-        color: rgba(224, 224, 255, 0.7);
-        font-size: 1.1rem;
+        color: rgba(224, 255, 240, 0.8);
+        font-size: 1.3rem;
         cursor: pointer;
         transition: var(--transition);
-        padding: 6px;
+        padding: 8px;
         border-radius: 50%;
         flex-shrink: 0;
     }
     
     .emoji-btn:hover, .attach-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.15);
         color: var(--light);
+        transform: scale(1.1);
     }
     
     .message-input-wrapper {
         flex: 1;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.12);
         border-radius: 25px;
-        padding: 4px 12px;
+        padding: 5px 15px;
         display: flex;
         align-items: center;
-        min-height: 40px;
+        min-height: 45px;
+        transition: var(--transition);
+    }
+    
+    .message-input-wrapper:focus-within {
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 0 2px rgba(0, 200, 81, 0.3);
     }
     
     .message-input {
@@ -539,39 +596,41 @@
         background: transparent;
         border: none;
         color: white;
-        font-size: 0.9rem;
-        padding: 8px 0;
+        font-size: 0.95rem;
+        padding: 10px 0;
         resize: none;
         height: auto;
-        min-height: 20px;
-        max-height: 80px;
+        min-height: 25px;
+        max-height: 100px;
         outline: none;
         line-height: 1.4;
     }
     
     .message-input::placeholder {
-        color: rgba(224, 224, 255, 0.6);
+        color: rgba(224, 255, 240, 0.6);
     }
     
     .send-button {
         background: var(--whatsapp-green);
         border: none;
         color: white;
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
         cursor: pointer;
         transition: var(--transition);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1rem;
+        font-size: 1.1rem;
         flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(0, 200, 81, 0.4);
     }
     
     .send-button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0, 200, 81, 0.6);
+        background: var(--whatsapp-light);
     }
     
     .file-input {
@@ -584,275 +643,149 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: rgba(224, 224, 255, 0.6);
+        color: rgba(224, 255, 240, 0.6);
         text-align: center;
-        padding: 30px;
-        background: rgba(10, 15, 25, 0.5);
+        padding: 40px;
+        background: rgba(10, 25, 20, 0.5);
     }
     
     .empty-chat i {
-        font-size: 4rem;
-        margin-bottom: 15px;
-        color: rgba(42, 107, 255, 0.3);
+        font-size: 5rem;
+        margin-bottom: 20px;
+        color: rgba(0, 200, 81, 0.3);
     }
     
     .empty-chat h3 {
-        font-size: 1.5rem;
-        margin-bottom: 8px;
+        font-size: 1.8rem;
+        margin-bottom: 12px;
         color: var(--light);
     }
     
     .empty-chat p {
-        font-size: 0.9rem;
-        max-width: 350px;
-        line-height: 1.5;
+        font-size: 1rem;
+        max-width: 400px;
+        line-height: 1.6;
+        margin-bottom: 20px;
     }
     
     .emoji-picker {
         position: absolute;
-        bottom: 70px;
-        right: 15px;
+        bottom: 80px;
+        right: 20px;
         background: var(--card-bg-solid);
-        border-radius: 12px;
-        padding: 12px;
-        border: 1px solid rgba(42, 107, 255, 0.2);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        border-radius: 16px;
+        padding: 15px;
+        border: 1px solid rgba(0, 200, 81, 0.3);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         display: none;
         z-index: 1000;
-        max-width: 280px;
-        max-height: 200px;
+        max-width: 300px;
+        max-height: 220px;
         overflow-y: auto;
     }
     
     .emoji-picker h4 {
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         color: var(--light);
-        font-size: 0.9rem;
+        font-size: 1rem;
+        text-align: center;
     }
     
     .emoji-grid {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 6px;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
     }
     
     .emoji-item {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         cursor: pointer;
         text-align: center;
-        padding: 4px;
-        border-radius: 6px;
+        padding: 6px;
+        border-radius: 8px;
         transition: var(--transition);
     }
     
     .emoji-item:hover {
-        background: rgba(42, 107, 255, 0.2);
-        transform: scale(1.1);
+        background: rgba(0, 200, 81, 0.2);
+        transform: scale(1.2);
     }
     
-    /* Modal de Configuración */
-    .settings-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 10, 0.9);
-        z-index: 2000;
-        justify-content: center;
-        align-items: center;
-        backdrop-filter: blur(15px);
+    /* Novedades Section */
+    .news-section {
+        padding: 20px;
+        background: rgba(0, 200, 81, 0.1);
+        border-radius: 12px;
+        margin: 15px;
+        border: 1px solid rgba(0, 200, 81, 0.2);
     }
     
-    .settings-container {
-        background: var(--card-bg-solid);
-        border-radius: 15px;
-        width: 90%;
-        max-width: 500px;
-        padding: 2rem;
-        border: 1px solid rgba(42, 107, 255, 0.2);
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(42, 107, 255, 0.2);
-        animation: modal-appear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    
-    @keyframes modal-appear {
-        0% { transform: scale(0.8); opacity: 0; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-    
-    .settings-header {
+    .news-section h3 {
+        color: var(--light);
+        margin-bottom: 15px;
+        font-size: 1.2rem;
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
+        gap: 10px;
     }
     
-    .settings-header h2 {
-        color: var(--light);
-        font-weight: 800;
-        font-size: 1.8rem;
-        letter-spacing: 1.5px;
-    }
-    
-    .close-settings {
-        background: none;
-        border: none;
-        font-size: 2rem;
-        cursor: pointer;
-        color: var(--light);
+    .news-item {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border-left: 4px solid var(--whatsapp-green);
         transition: var(--transition);
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
     }
     
-    .close-settings:hover {
-        color: var(--accent);
-        transform: rotate(90deg);
+    .news-item:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateX(5px);
     }
     
-    .settings-option {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .settings-option:last-child {
-        border-bottom: none;
-    }
-    
-    .settings-info h3 {
+    .news-item h4 {
         color: var(--light);
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         margin-bottom: 5px;
     }
     
-    .settings-info p {
-        color: rgba(224, 224, 255, 0.6);
-        font-size: 0.9rem;
-    }
-    
-    .toggle-switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-    }
-    
-    .toggle-switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-    
-    .toggle-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(255, 255, 255, 0.2);
-        transition: .4s;
-        border-radius: 24px;
-    }
-    
-    .toggle-slider:before {
-        position: absolute;
-        content: "";
-        height: 16px;
-        width: 16px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-    
-    input:checked + .toggle-slider {
-        background-color: var(--whatsapp-green);
-    }
-    
-    input:checked + .toggle-slider:before {
-        transform: translateX(26px);
-    }
-    
-    .security-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: rgba(37, 211, 102, 0.2);
-        color: var(--whatsapp-green);
-        padding: 5px 10px;
-        border-radius: 15px;
-        font-size: 0.8rem;
-        margin-top: 10px;
+    .news-item p {
+        color: rgba(224, 255, 240, 0.7);
+        font-size: 0.85rem;
     }
     
     /* Scrollbar personalizado */
     .users-list::-webkit-scrollbar,
     .messages-container::-webkit-scrollbar,
     .emoji-picker::-webkit-scrollbar {
-        width: 5px;
+        width: 6px;
     }
     
     .users-list::-webkit-scrollbar-track,
     .messages-container::-webkit-scrollbar-track,
     .emoji-picker::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.08);
         border-radius: 3px;
     }
     
     .users-list::-webkit-scrollbar-thumb,
     .messages-container::-webkit-scrollbar-thumb,
     .emoji-picker::-webkit-scrollbar-thumb {
-        background: var(--primary);
+        background: var(--whatsapp-green);
         border-radius: 3px;
     }
     
     /* ===== RESPONSIVE DESIGN ===== */
     
-    /* Tablets (768px - 1024px) */
     @media (max-width: 1024px) {
-        .container {
-            padding: 0 10px;
-        }
-        
-        .chat-container {
-            height: calc(100vh - 70px);
-            padding: 10px 0;
-            gap: 10px;
-        }
-        
         .users-sidebar {
-            width: 300px;
-        }
-        
-        .message {
-            max-width: 75%;
+            width: 320px;
         }
     }
     
-    /* Tablets pequeñas y móviles grandes (600px - 768px) */
     @media (max-width: 768px) {
         .logo span {
             display: none;
-        }
-        
-        .logo {
-            font-size: 1.2rem;
-        }
-        
-        .logo img {
-            height: 30px;
         }
         
         .user-name {
@@ -860,64 +793,12 @@
         }
         
         .chat-container {
-            height: calc(100vh - 60px);
-            padding: 8px 0;
-            gap: 8px;
+            height: calc(100vh - 70px);
         }
         
         .users-sidebar {
-            width: 280px;
-        }
-        
-        .sidebar-header {
-            padding: 12px;
-        }
-        
-        .search-container {
-            padding: 10px;
-        }
-        
-        .user-item {
-            padding: 10px;
-        }
-        
-        .message {
-            max-width: 80%;
-            padding: 8px 12px;
-        }
-        
-        .message-content {
-            font-size: 0.85rem;
-        }
-        
-        .message-image {
-            max-height: 200px;
-        }
-    }
-    
-    /* Móviles (480px - 600px) */
-    @media (max-width: 600px) {
-        .container {
-            padding: 0 5px;
-        }
-        
-        header {
-            padding: 0.8rem 0;
-        }
-        
-        .chat-container {
-            height: calc(100vh - 60px);
-            padding: 5px 0;
-            position: relative;
-        }
-        
-        /* En móvil: mostrar solo lista de contactos o solo chat */
-        .users-sidebar {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
+            position: absolute;
             z-index: 10;
             transform: translateX(0);
             transition: transform 0.3s ease;
@@ -928,11 +809,8 @@
         }
         
         .chat-area {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
+            position: absolute;
             z-index: 20;
             transform: translateX(100%);
             transition: transform 0.3s ease;
@@ -949,145 +827,24 @@
         .message {
             max-width: 85%;
         }
-        
-        .message-input-container {
-            padding: 10px 12px;
-        }
-        
-        .emoji-picker {
-            bottom: 60px;
-            right: 10px;
-            max-width: 250px;
-            max-height: 180px;
-        }
-        
-        .empty-chat {
-            padding: 20px;
-        }
-        
-        .empty-chat i {
-            font-size: 3rem;
-        }
-        
-        .empty-chat h3 {
-            font-size: 1.3rem;
-        }
-        
-        .empty-chat p {
-            font-size: 0.85rem;
-        }
     }
     
-    /* Móviles pequeños (hasta 480px) */
     @media (max-width: 480px) {
-        .logo {
-            font-size: 1rem;
-        }
-        
-        .logo img {
-            height: 25px;
-        }
-        
-        .user-avatar {
-            width: 30px;
-            height: 30px;
-            font-size: 0.8rem;
-        }
-        
-        .logout-btn {
-            padding: 5px 10px;
-            font-size: 0.75rem;
-        }
-        
-        .sidebar-header .user-avatar {
-            width: 40px;
-            height: 40px;
-        }
-        
-        .sidebar-header-info h3 {
-            font-size: 1rem;
-        }
-        
-        .user-avatar-small {
-            width: 40px;
-            height: 40px;
-        }
-        
-        .user-name-small {
-            font-size: 0.9rem;
-        }
-        
-        .last-message {
-            font-size: 0.75rem;
-        }
-        
-        .chat-header {
-            padding: 10px 12px;
-        }
-        
-        .chat-header-info h3 {
-            font-size: 1rem;
+        .sidebar-header, .chat-header {
+            padding: 12px 15px;
         }
         
         .messages-container {
-            padding: 12px;
+            padding: 15px;
         }
         
-        .message {
-            max-width: 90%;
-            padding: 8px 10px;
+        .message-input-container {
+            padding: 12px 15px;
         }
         
-        .message-content {
-            font-size: 0.8rem;
-        }
-        
-        .message-image {
-            max-height: 180px;
-        }
-        
-        .message-input-wrapper {
-            min-height: 35px;
-        }
-        
-        .message-input {
-            font-size: 0.85rem;
-            padding: 6px 0;
-        }
-        
-        .send-button {
-            width: 35px;
-            height: 35px;
-            font-size: 0.9rem;
-        }
-        
-        .emoji-btn, .attach-btn {
-            font-size: 1rem;
-            padding: 5px;
-        }
-        
-        .emoji-picker {
-            max-width: 220px;
-            max-height: 160px;
-            padding: 10px;
-        }
-        
-        .emoji-grid {
-            grid-template-columns: repeat(5, 1fr);
-            gap: 5px;
-        }
-        
-        .emoji-item {
-            font-size: 1.1rem;
-            padding: 3px;
-        }
-        
-        .settings-container {
-            padding: 1.5rem;
-        }
-        
-        .settings-header h2 {
-            font-size: 1.5rem;
+        .news-section {
+            margin: 10px;
+            padding: 15px;
         }
     }
     </style>
@@ -1100,14 +857,14 @@
             <nav>
                 <div class="logo">
                     <img src="https://raw.githubusercontent.com/welding30001994/Jayden_control/refs/heads/main/jayden.jpeg" alt="Jayden Company Logo">
-                    <span>Jayden Chat Seguro</span>
+                    <span>Jayden Chat</span>
                 </div>
                 <div class="user-info">
                     <div class="header-actions">
                         <button class="header-btn" id="settingsButton" title="Configuración">
                             <i class="fas fa-cog"></i>
                         </button>
-                        <button class="header-btn" id="toggleSidebar" title="Ocultar/Mostrar contactos">
+                        <button class="header-btn" id="toggleSidebar" title="Contactos">
                             <i class="fas fa-users"></i>
                         </button>
                     </div>
@@ -1127,7 +884,7 @@
                     <div class="user-avatar" id="currentUserAvatar">U</div>
                     <div class="sidebar-header-info">
                         <h3 id="currentUserName">Usuario</h3>
-                        <p>En línea</p>
+                        <p><i class="fas fa-circle online-pulse"></i> Conectado</p>
                     </div>
                 </div>
                 
@@ -1135,6 +892,19 @@
                     <div class="search-box">
                         <i class="fas fa-search"></i>
                         <input type="text" id="searchUsers" placeholder="Buscar contactos...">
+                    </div>
+                </div>
+                
+                <!-- Sección de Novedades -->
+                <div class="news-section">
+                    <h3><i class="fas fa-bell"></i> Novedades</h3>
+                    <div class="news-item">
+                        <h4>Chats Cifrados Activos</h4>
+                        <p>Todas tus conversaciones están protegidas con cifrado de extremo a extremo</p>
+                    </div>
+                    <div class="news-item">
+                        <h4>Nuevos Usuarios</h4>
+                        <p>Se han unido 5 nuevos usuarios esta semana</p>
                     </div>
                 </div>
                 
@@ -1154,7 +924,7 @@
                     </div>
                     <div class="chat-header-info">
                         <h3 id="chatWithName">Selecciona un chat</h3>
-                        <p id="chatWithStatus">En línea</p>
+                        <p id="chatWithStatus"><i class="fas fa-circle online-pulse"></i> En línea</p>
                     </div>
                     <div class="chat-actions">
                         <button class="chat-action-btn" id="clearChatBtn" title="Borrar chat">
@@ -1172,11 +942,11 @@
                 <div class="messages-container" id="messagesContainer">
                     <div class="empty-chat" id="emptyChat">
                         <i class="fas fa-comments"></i>
-                        <h3>Bienvenido a Jayden Chat Seguro</h3>
+                        <h3>Bienvenido a Jayden Chat</h3>
                         <p>Selecciona un contacto de la lista para comenzar una conversación cifrada</p>
                         <div class="security-badge">
                             <i class="fas fa-lock"></i>
-                            <span>Cifrado de extremo a extremo</span>
+                            <span>Cifrado de extremo a extremo activo</span>
                         </div>
                     </div>
                 </div>
@@ -1190,7 +960,7 @@
                     </button>
                     <input type="file" id="fileInput" class="file-input" accept="image/*">
                     <div class="message-input-wrapper">
-                        <textarea class="message-input" id="messageInput" placeholder="Escribe un mensaje cifrado..." rows="1"></textarea>
+                        <textarea class="message-input" id="messageInput" placeholder="Escribe un mensaje..." rows="1"></textarea>
                     </div>
                     <button class="send-button" id="sendButton">
                         <i class="fas fa-paper-plane"></i>
@@ -1203,75 +973,6 @@
                         <!-- Los emojis se cargarán dinámicamente -->
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Configuración -->
-    <div class="settings-modal" id="settingsModal">
-        <div class="settings-container">
-            <div class="settings-header">
-                <h2>Configuración</h2>
-                <button class="close-settings" id="closeSettings">&times;</button>
-            </div>
-            
-            <div class="settings-option">
-                <div class="settings-info">
-                    <h3>Cifrado de mensajes</h3>
-                    <p>Todos los mensajes están cifrados de extremo a extremo</p>
-                    <div class="security-badge">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Protección activa</span>
-                    </div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="encryptionToggle" checked disabled>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            
-            <div class="settings-option">
-                <div class="settings-info">
-                    <h3>Notificaciones</h3>
-                    <p>Recibir notificaciones de nuevos mensajes</p>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="notificationsToggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            
-            <div class="settings-option">
-                <div class="settings-info">
-                    <h3>Modo oscuro</h3>
-                    <p>Activar interfaz con tema oscuro</p>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="darkModeToggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            
-            <div class="settings-option">
-                <div class="settings-info">
-                    <h3>Estado en línea</h3>
-                    <p>Mostrar cuando estás conectado</p>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="onlineStatusToggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            
-            <div class="settings-option">
-                <div class="settings-info">
-                    <h3>Confirmaciones de lectura</h3>
-                    <p>Mostrar cuando tus mensajes son leídos</p>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="readReceiptsToggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
             </div>
         </div>
     </div>
@@ -1320,9 +1021,6 @@
         const chatArea = document.getElementById('chatArea');
         const backButton = document.getElementById('backButton');
         const toggleSidebar = document.getElementById('toggleSidebar');
-        const settingsButton = document.getElementById('settingsButton');
-        const settingsModal = document.getElementById('settingsModal');
-        const closeSettings = document.getElementById('closeSettings');
         const clearChatBtn = document.getElementById('clearChatBtn');
         
         // Variables globales
@@ -1330,29 +1028,25 @@
         let selectedUser = null;
         let usersRef = null;
         let messagesRef = null;
-        let isMobile = window.innerWidth <= 600;
+        let isMobile = window.innerWidth <= 768;
         let encryptionKey = null;
         
-        // Generar clave de cifrado única para el usuario
-        function generateEncryptionKey() {
-            if (!encryptionKey) {
-                // Usar el UID del usuario como base para la clave
-                const baseKey = currentUser.uid + '_jayden_chat_secure_key_2024';
-                encryptionKey = CryptoJS.SHA256(baseKey).toString();
-            }
-            return encryptionKey;
+        // Generar clave de cifrado única para cada chat
+        function generateChatKey(userId1, userId2) {
+            const chatId = [userId1, userId2].sort().join('_');
+            return CryptoJS.SHA256(chatId + '_jayden_chat_key_2024').toString();
         }
         
-        // Cifrar mensaje
-        function encryptMessage(message) {
-            const key = generateEncryptionKey();
+        // Cifrar mensaje para un chat específico
+        function encryptMessage(message, targetUserId) {
+            const key = generateChatKey(currentUser.uid, targetUserId);
             return CryptoJS.AES.encrypt(message, key).toString();
         }
         
-        // Descifrar mensaje
-        function decryptMessage(encryptedMessage) {
+        // Descifrar mensaje de un chat específico
+        function decryptMessage(encryptedMessage, senderUserId) {
             try {
-                const key = generateEncryptionKey();
+                const key = generateChatKey(currentUser.uid, senderUserId);
                 const bytes = CryptoJS.AES.decrypt(encryptedMessage, key);
                 const decrypted = bytes.toString(CryptoJS.enc.Utf8);
                 return decrypted || '🔒 Mensaje cifrado';
@@ -1374,7 +1068,6 @@
                 setupPresence();
                 setupEmojiPicker();
                 setupResponsive();
-                setupSettings();
             } else {
                 window.location.href = 'index.html';
             }
@@ -1382,7 +1075,6 @@
         
         // Configurar información del usuario
         function setupUser(user) {
-            // Obtener información adicional del usuario desde la base de datos
             database.ref('users/' + user.uid).once('value').then((snapshot) => {
                 const userData = snapshot.val();
                 if (userData) {
@@ -1391,7 +1083,6 @@
                     currentUserName.textContent = userData.name;
                     currentUserAvatar.textContent = userData.name.charAt(0).toUpperCase();
                 } else {
-                    // Si no hay datos, usar el email
                     const displayName = user.email.split('@')[0];
                     userName.textContent = displayName;
                     userAvatar.textContent = displayName.charAt(0).toUpperCase();
@@ -1418,14 +1109,13 @@
                 
                 if (users) {
                     Object.keys(users).forEach((userId) => {
-                        // No mostrar el usuario actual en la lista
                         if (userId !== currentUser.uid) {
                             const user = users[userId];
                             createUserItem(userId, user);
                         }
                     });
                 } else {
-                    usersList.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(224,224,255,0.6);">No hay otros usuarios registrados</div>';
+                    usersList.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(224,255,240,0.6);">No hay otros usuarios registrados</div>';
                 }
             });
         }
@@ -1456,9 +1146,7 @@
             
             usersList.appendChild(userItem);
             
-            // Verificar estado en línea
             checkUserOnlineStatus(userId);
-            // Cargar último mensaje
             loadLastMessage(userId);
         }
         
@@ -1489,13 +1177,13 @@
                 const lastMessageTimeElement = document.getElementById(`lastMessageTime-${userId}`);
                 
                 if (message) {
-                    let messageText = message.text ? decryptMessage(message.text) : '';
+                    let messageText = message.text ? decryptMessage(message.text, message.senderId) : '';
                     if (message.imageUrl) {
-                        messageText = '📷 Imagen cifrada';
+                        messageText = '📷 Imagen';
                     }
                     
                     if (lastMessageElement) {
-                        lastMessageElement.textContent = messageText.substring(0, 30) + (messageText.length > 30 ? '...' : '');
+                        lastMessageElement.textContent = messageText.substring(0, 35) + (messageText.length > 35 ? '...' : '');
                     }
                     
                     if (lastMessageTimeElement) {
@@ -1524,13 +1212,11 @@
         function setupPresence() {
             const userStatusRef = database.ref('status/' + currentUser.uid);
             
-            // Establecer estado como en línea
             userStatusRef.set({
                 state: 'online',
                 lastChanged: firebase.database.ServerValue.TIMESTAMP
             });
             
-            // Establecer estado como desconectado cuando el usuario cierre la pestaña
             window.addEventListener('beforeunload', () => {
                 userStatusRef.set({
                     state: 'offline',
@@ -1543,7 +1229,6 @@
         function selectUser(userId, user) {
             selectedUser = { id: userId, ...user };
             
-            // Actualizar UI
             document.querySelectorAll('.user-item').forEach(item => {
                 item.classList.remove('active');
             });
@@ -1554,19 +1239,14 @@
             emptyChat.style.display = 'none';
             messageInputContainer.style.display = 'flex';
             
-            // Actualizar estado en línea
             checkSelectedUserOnlineStatus(userId);
-            
-            // Cargar mensajes
             loadMessages(userId);
             
-            // En móvil: cambiar a vista de chat
             if (isMobile) {
                 usersSidebar.classList.add('hidden');
                 chatArea.classList.add('active');
             }
             
-            // Enfocar el campo de texto
             messageInput.focus();
         }
         
@@ -1578,23 +1258,20 @@
                 const status = snapshot.val();
                 
                 if (status && status.state === 'online') {
-                    chatWithStatus.textContent = 'En línea';
+                    chatWithStatus.innerHTML = '<i class="fas fa-circle online-pulse"></i> En línea';
                 } else {
-                    chatWithStatus.textContent = 'Desconectado';
+                    chatWithStatus.innerHTML = '<i class="fas fa-circle" style="color: #666"></i> Desconectado';
                 }
             });
         }
         
         // Cargar mensajes con un usuario
         function loadMessages(userId) {
-            // Limpiar contenedor de mensajes
             messagesContainer.innerHTML = '';
             
-            // Referencia a los mensajes entre los dos usuarios
             const chatId = getChatId(currentUser.uid, userId);
             messagesRef = database.ref('chats/' + chatId);
             
-            // Escuchar nuevos mensajes
             messagesRef.on('child_added', (snapshot) => {
                 const message = snapshot.val();
                 displayMessage(message);
@@ -1610,12 +1287,10 @@
         function displayMessage(message) {
             const messageElement = document.createElement('div');
             
-            // CORREGIDO: Determinar correctamente si el mensaje es enviado o recibido
             const isSent = message.senderId === currentUser.uid;
             messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
             
-            // Descifrar mensaje
-            const decryptedText = message.text ? decryptMessage(message.text) : '';
+            const decryptedText = message.text ? decryptMessage(message.text, message.senderId) : '';
             
             let contentHtml = `<div class="message-content">${decryptedText || ''}</div>`;
             
@@ -1626,7 +1301,6 @@
             const time = new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             contentHtml += `<div class="message-time">${time}</div>`;
             
-            // Agregar botones de acción para mensajes propios
             if (isSent) {
                 contentHtml += `
                     <div class="message-actions">
@@ -1639,8 +1313,6 @@
             
             messageElement.innerHTML = contentHtml;
             messagesContainer.appendChild(messageElement);
-            
-            // Scroll al último mensaje
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
         
@@ -1679,8 +1351,7 @@
                 const messageRef = database.ref('chats/' + chatId).push();
                 const messageId = messageRef.key;
                 
-                // Cifrar mensaje antes de enviar
-                const encryptedText = encryptMessage(text);
+                const encryptedText = encryptMessage(text, selectedUser.id);
                 
                 messageRef.set({
                     text: encryptedText,
@@ -1725,7 +1396,6 @@
         
         // Configurar selector de emojis
         function setupEmojiPicker() {
-            // Cargar emojis en la cuadrícula
             emojis.forEach(emoji => {
                 const emojiItem = document.createElement('div');
                 emojiItem.className = 'emoji-item';
@@ -1738,18 +1408,15 @@
                 emojiGrid.appendChild(emojiItem);
             });
             
-            // Mostrar/ocultar selector de emojis
             emojiButton.addEventListener('click', (e) => {
                 e.stopPropagation();
                 emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
             });
             
-            // Ocultar selector al hacer clic fuera
             document.addEventListener('click', () => {
                 emojiPicker.style.display = 'none';
             });
             
-            // Prevenir que el clic en el selector lo cierre
             emojiPicker.addEventListener('click', (e) => {
                 e.stopPropagation();
             });
@@ -1757,22 +1424,18 @@
         
         // Configurar responsive
         function setupResponsive() {
-            // Detectar cambios de tamaño de pantalla
             window.addEventListener('resize', () => {
-                isMobile = window.innerWidth <= 600;
+                isMobile = window.innerWidth <= 768;
                 
                 if (!isMobile) {
-                    // En desktop: mostrar ambos paneles
                     usersSidebar.classList.remove('hidden');
                     chatArea.classList.remove('active');
                 } else if (!selectedUser) {
-                    // En móvil sin chat seleccionado: mostrar solo lista
                     usersSidebar.classList.remove('hidden');
                     chatArea.classList.remove('active');
                 }
             });
             
-            // Botón para volver a la lista en móvil
             backButton.addEventListener('click', () => {
                 if (isMobile) {
                     usersSidebar.classList.remove('hidden');
@@ -1780,7 +1443,6 @@
                 }
             });
             
-            // Botón para ocultar/mostrar sidebar
             toggleSidebar.addEventListener('click', () => {
                 if (isMobile) {
                     usersSidebar.classList.toggle('hidden');
@@ -1788,28 +1450,7 @@
                     usersSidebar.style.display = usersSidebar.style.display === 'none' ? 'flex' : 'none';
                 }
             });
-        }
-        
-        // Configurar sistema de configuraciones
-        function setupSettings() {
-            // Abrir modal de configuración
-            settingsButton.addEventListener('click', () => {
-                settingsModal.style.display = 'flex';
-            });
             
-            // Cerrar modal de configuración
-            closeSettings.addEventListener('click', () => {
-                settingsModal.style.display = 'none';
-            });
-            
-            // Cerrar modal al hacer clic fuera
-            settingsModal.addEventListener('click', (e) => {
-                if (e.target === settingsModal) {
-                    settingsModal.style.display = 'none';
-                }
-            });
-            
-            // Botón para borrar chat
             clearChatBtn.addEventListener('click', clearChat);
         }
         
@@ -1837,7 +1478,6 @@
         });
         
         logoutBtn.addEventListener('click', () => {
-            // Establecer estado como desconectado
             if (currentUser) {
                 database.ref('status/' + currentUser.uid).set({
                     state: 'offline',
@@ -1869,6 +1509,33 @@
         
         // Ajustar altura inicial del textarea
         adjustTextareaHeight();
+        
+        // Agregar estilo para el pulso online
+        const style = document.createElement('style');
+        style.textContent = `
+            .online-pulse {
+                animation: pulse 2s infinite;
+                color: #00C851;
+            }
+            @keyframes pulse {
+                0% { opacity: 1; }
+                50% { opacity: 0.5; }
+                100% { opacity: 1; }
+            }
+            .security-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(0, 200, 81, 0.2);
+                color: #00C851;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 0.9rem;
+                margin-top: 15px;
+                border: 1px solid rgba(0, 200, 81, 0.3);
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
